@@ -1,0 +1,8 @@
+bottom:
+    - class_name: user-map
+      id_name: user-map
+      name: 访客地图
+      icon: fa-solid fa-globe
+      order:
+      html: <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=0GsHLCdDgCm_gTbEdFw3TBkMzW82ij3jHPVSgEKOEZ0"></script>
+

@@ -1,0 +1,13 @@
+{
+    "[latex]": {
+        "diffEditor.wordWrap": "on",
+        "editor.wordWrap": "on"
+    },
+    "grammarly.selectors": [
+        {
+            "language": "latex",
+            "scheme": "file",
+            "pattern": "e:\\作业\\PRISMS\\10\\ap chem\\Crystal Violet Lab\\lab.tex"
+        }
+    ]
+}

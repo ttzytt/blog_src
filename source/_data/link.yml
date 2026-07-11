@@ -1,0 +1,27 @@
+- class_name: tzyt
+  class_descr: 
+  link_list:
+    - name: 洛谷
+      link: https://www.luogu.com.cn/user/394488
+      avatar: /img/luogu_logo.png
+      descr: tzyt 的洛谷主页
+    - name: GitHub
+      link: https://github.com/ttzytt
+      descr: tzyt 的 GitHub 主页
+      avatar: https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg
+    - name: GitHub 仓库
+      link: https://github.com/ttzytt/ttzytt.github.io
+      descr: 此博客的 GitHub 仓库
+      avatar: https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg
+
+- class_name: 友链
+  class_descr:
+  link_list:
+    - name: MqCreaple
+      link: https://mqcreaple.github.io/
+      avatar: https://mqcreaple.github.io/favicon.png
+      descr: 
+    # - name: henry_ji
+    #   link: https://henry-ji.github.io/blog.github.io/
+    #   avatar: https://cdn.luogu.com.cn/upload/usericon/373484.png
+    #   descr: 
