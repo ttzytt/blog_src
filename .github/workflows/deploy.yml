@@ -49,8 +49,8 @@ jobs:
           rsync -a --delete --exclude='.git' public/ deploy/
 
           cd deploy
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "ttzytt"
+          git config user.email "zyt2006613@outlook.com"
           git add -A
 
           if git diff --cached --quiet; then
@@ -58,5 +58,8 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Deploy blog_src@${GITHUB_SHA}"
+          source_commit_message="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%B "$GITHUB_SHA")"
+          git commit -m "Deploy blog_src@${GITHUB_SHA}" \
+            -m "Source commit (${GITHUB_SHA}):"$'\n\n'"${source_commit_message}" \
+            -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
           git push origin main
