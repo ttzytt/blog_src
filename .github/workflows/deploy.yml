@@ -21,6 +21,18 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
 
+      - name: Set up latest stable Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Validate multilingual content
+        run: |
+          python -m py_compile ci_tools/check_translation_taxonomy.py ci_tools/check_language_coverage.py ci_tools/check_front_matter_consistency.py
+          python ci_tools/check_translation_taxonomy.py
+          python ci_tools/check_language_coverage.py --strict
+          python ci_tools/check_front_matter_consistency.py
+
       - name: Set up latest Node.js LTS
         uses: actions/setup-node@v6
         with:
@@ -32,7 +44,7 @@ jobs:
         run: npm ci
 
       - name: Build site
-        run: npm run clean && npm run build
+        run: npm run build
 
       - name: Configure deploy key
         env:

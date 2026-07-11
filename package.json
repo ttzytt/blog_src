@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
+    "build:zh": "hexo generate --config _config.yml,config-zh.yml",
+    "build:en": "hexo generate --config _config.yml,config-en.yml --force",
+    "build": "node scripts/build-multilingual.js",
+    "check:multilingual": "python ci_tools/check_translation_taxonomy.py && python ci_tools/check_language_coverage.py --strict && python ci_tools/check_front_matter_consistency.py",
+    "preview": "npm run check:multilingual && npm run build && npm run server",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server --config _config.yml,config-zh.yml"
   },
   "hexo": {
     "version": "8.1.2"

@@ -1,0 +1,13 @@
+# Chinese-site overrides. Loaded after _config.yml.
+theme_config:
+  menu:
+    主页: / || fas fa-home
+    时间线: /archives/ || fas fa-archive
+    标签: /tags/ || fas fa-tags
+    分类: /categories/ || fas fa-folder-open
+    友链: /link/ || fas fa-link
+    关于: /about/ || fas fa-heart
+    图库: /gallery/ || fas fa-image
+    语言||fas fa-language:
+      English: /en/ || fas fa-e multiple-language-switch
+      中文: / || fas fa-c current-language

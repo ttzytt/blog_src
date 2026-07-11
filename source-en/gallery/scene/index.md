@@ -1,3 +1,7 @@
+{% note danger simple %}
+The content below was generated entirely by machine translation. Please verify its accuracy. If anything is unclear, consult the [Chinese source version](/gallery/scene/).
+{% endnote %}
+
 {% gallery %}
 ![](/img/gallery/scene/DSC4242.jpg)
 ![](/img/gallery/scene/DSC4458.jpg)
@@ -16,5 +20,4 @@
 ![](/img/gallery/scene/DSC6603_2.jpg)
 ![](/img/gallery/scene/DSC6679_1.jpg)
 ![](/img/gallery/scene/DSC6828_1.jpg)
-
 {% endgallery %}

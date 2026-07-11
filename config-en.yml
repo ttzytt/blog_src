@@ -1,0 +1,24 @@
+# English site overrides. Loaded after _config.yml.
+language: en
+title: tzyt's Blog
+url: https://ttzytt.com/en
+root: /en/
+source_dir: source-en
+# The orchestration script builds English into a temporary standalone `public`
+# tree and then moves that tree under the Chinese build's `public/en` directory.
+public_dir: public
+
+theme_config:
+  menu:
+    Home: / || fas fa-home
+    Archives: /archives/ || fas fa-archive
+    Tags: /tags/ || fas fa-tags
+    Categories: /categories/ || fas fa-folder-open
+    Links: /link/ || fas fa-link
+    About: /about/ || fas fa-heart
+    Gallery: /gallery/ || fas fa-image
+    Language||fas fa-language:
+      English: / || fas fa-e current-language
+      中文: /_switch-to-zh/ || fas fa-c multiple-language-switch
+  social:
+    fa fa-rss: /atom.xml || RSS

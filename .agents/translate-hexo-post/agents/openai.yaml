@@ -1,0 +1,4 @@
+interface:
+  display_name: "Translate Hexo Post"
+  short_description: "Translate one Hexo page with validated metadata"
+  default_prompt: "Use $translate-hexo-post to create or update one language counterpart while preserving source metadata and validating front matter and taxonomy."

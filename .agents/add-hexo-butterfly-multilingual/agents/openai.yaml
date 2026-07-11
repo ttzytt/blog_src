@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Hexo Butterfly Languages"
+  short_description: "Build and validate a multilingual Butterfly site"
+  default_prompt: "Use $add-hexo-butterfly-multilingual to add or maintain isolated language builds, same-page switching, and CI validation for this Hexo Butterfly site."

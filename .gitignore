@@ -1,7 +1,10 @@
 .DS_Store
 Thumbs.db
 db.json
+.multilingual-build-*/
 *.log
+__pycache__/
+*.py[cod]
 node_modules/
 public/
 .deploy*/
