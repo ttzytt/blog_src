@@ -58,8 +58,10 @@ jobs:
             exit 0
           fi
 
-          source_commit_message="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%B "$GITHUB_SHA")"
-          git commit -m "Deploy blog_src@${GITHUB_SHA}" \
-            -m "Source commit (${GITHUB_SHA}):"$'\n\n'"${source_commit_message}" \
-            -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          source_commit_title="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%s "$GITHUB_SHA")"
+          source_commit_description="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%b "$GITHUB_SHA")"
+          git commit -m "[deploy] $source_commit_title" \
+            -m "Source commit: ${GITHUB_SHA}" \
+            -m "Co-authored-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
+            -m "$source_commit_description"
           git push origin main
