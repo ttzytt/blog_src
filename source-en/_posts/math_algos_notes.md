@@ -119,12 +119,45 @@ $$
 \end{align*}
 $$
 
-Substituting these expressions into $2=50+16(-3)$ repeatedly eventually yields:
-$$2=1180x+482y,$$
-where $x=-29,y=71$. The extended Euclidean algorithm is essentially the reverse of the Euclidean algorithm: it uses the calculation process to derive a solution to $ax+by=\gcd(a,b)$.
+Substitute these expressions into $2=50+16(-3)$. We can first replace the $16$ in the expression with the sum of $216$ and $50(-4)$.
 
-To generalize, since $\gcd(a,b)=\gcd(b,a\bmod b)$, write:
-$$\gcd(b,a\bmod b)=bx_2+(a\bmod b)y_2.$$
+The expression now has the form $2=216x+50y$, where $x=-3$ and $y=13$.
+
+Next, replace $50$ with the sum of $482$ and $216(-2)$, turning the expression into $2=482x+216y$.
+
+Finally, replace $216$ with the sum of $1180$ and $482(-2)$. The resulting expression is:
+
+$$
+2=1180x+482y
+$$
+
+where $x=-29$ and $y=71$.
+
+This is exactly the answer we wanted.
+
+It is apparent that exgcd is somewhat like running the Euclidean algorithm in reverse. It uses the calculation process of the Euclidean algorithm to derive one solution to $ax+by=\gcd(a,b)$.
+
+Now let us generalize the pattern we just observed. What we want to solve first is:
+
+$$
+ax+by=\gcd(a,b)
+$$
+
+Because $\gcd(a,b)=\gcd(b,a\bmod b)$, $\gcd(b,a\bmod b)$ can also be written in the form $ax+by$:
+
+$$
+\gcd(b,a\bmod b)=bx_2+(a\bmod b)y_2.
+$$
+
+Although $\gcd(b,a\bmod b)$ is equal to $\gcd(a,b)$ here, giving
+
+$$
+ax+by=bx_2+(a\bmod b)y_2,
+$$
+
+the two sides use the same general form but have different values in the positions of $a$ and $b$. Their solutions $x,y$ and $x_2,y_2$ are therefore different. Suppose we already know $x_2$ and $y_2$. If we can determine how to calculate $x$ and $y$ from them, we can solve $x$ and $y$ recursively.
+
+We can simplify $bx_2+(a\bmod b)y_2$:
 Then:
 $$
 \begin{align*}
@@ -133,7 +166,21 @@ ax+by&=bx_2+(a\bmod b)y_2\\
 &=ay_2+b(x_2-\lfloor a/b\rfloor y_2).
 \end{align*}
 $$
-Thus, if $(x_2,y_2)$ is the solution for the recursive call, then $x=y_2$ and $y=x_2-\lfloor a/b\rfloor y_2$. The boundary is $b=0$, where $x=1,y=0$.
+Thus, if we have already found the solution $(x_2,y_2)$ to $bx_2+(a\bmod b)y_2=\gcd(b,a\bmod b)$, then in the original expression $ax+by=\gcd(a,b)$ we have $x=y_2$ and $y=x_2-\lfloor a/b\rfloor y_2$. This gives a recursive solution.
+
+The boundary condition is similar to the ordinary Euclidean algorithm: $b=0$. Then:
+
+$$
+\begin{align*}
+ax+by &= \gcd(a,b)\\
+ax+(0)y &= a\\
+x &= 1
+\end{align*}
+$$
+
+Although $y$ can take any value in this case, we normally return 0.
+
+The following is the code, using the C++20 standard:
 
 ```cpp
 template<typename T>
@@ -173,11 +220,21 @@ ax-bk=1.
 $$
 Setting $y=-k$ gives $ax+by=1$.
 
-One of $x,y$ may be negative. A negative $y$ is harmless, but a negative $x$ is not the smallest positive solution. We can add multiples of $b$ to $x$ while preserving the equation, so normalize it with:
+One of $x$ and $y$ in $ax+by=1$ may be negative. A negative $y$ causes no problem, but if $x$ is negative, the answer we obtain is not the smallest positive integer among all feasible values of $x$.
+
+Looking at $ax+by=1$, we can add a multiple of $b$ to $x$, transforming the expression into $a(x+bn)+b(y+an)=1$ (note that $b$ is negative, so the $abn$ terms cancel). This lets us make $x$ positive without changing the equality $ax+by=1$.
+
+We can therefore write:
 ```cpp
 x = (x % b + b) % b;
 ```
-The first `% b` brings a negative $x$ to the largest valid negative value, `+b` moves it to the smallest positive value, and the final `% b` also handles an originally positive $x$.
+Assume first that $x$ is negative.
+
+The first `x % b` adds some multiples of $b$ to $x$, turning it into the largest negative number that still satisfies the condition. For example, suppose $b$ is 13 and $x$ is -25. After `x = x % b`, $x$ becomes -12, which is equivalent to adding 13 to $x$.
+
+The following `+b` turns this largest valid negative number into the smallest valid positive number. For example, $x+b=-12+13=1$. What, then, is the purpose of the final `% b`?
+
+It handles the case where $x$ was positive to begin with. By subtracting suitable multiples of $b$ from $x$, it reduces $x$ to the smallest positive number satisfying the condition.
 
 For the modular-inverse [template problem](https://www.luogu.com.cn/problem/P3811):
 ```cpp
@@ -203,17 +260,23 @@ int main() {
 ```
 Because the data size is $3e6$ and the time limit is 500 ms, an $n\log p$ algorithm is too slow; use the linear algorithm below.
 
+References:
+1. <https://www.cnblogs.com/zjp-shadow/p/7773566.html>
+2. <https://zhuanlan.zhihu.com/p/86561431>
+
 ## Linear Recurrence
 
 The linear recurrence computes the modular inverses of all integers from $1$ to $n$ modulo a prime $p$ in $O(n)$ time. $p$ must be prime to ensure all values in the range are coprime to it.
 
-The inverse of 1 is 1, providing the initial condition. Suppose we have reached $i$. Write $p\div i=k\ldots r$, so $p=ki+r$. Modulo $p$:
+Because this is a recurrence algorithm, it needs an initial condition. It is easy to see that the inverse of 1 modulo any integer is 1 itself, because $1\times1=1$. This gives us the initial condition.
+
+Suppose the recurrence has now reached the number $i$. Write $p\div i=k\ldots r$, so $p=ki+r$. Converting this to a congruence gives:
 $$ki+r\equiv0\pmod p.$$
-Multiplying by $i^{-1}r^{-1}$ and expanding gives:
+Let $i^{-1}$ and $r^{-1}$ denote the modular inverses of $i$ and $r$ modulo $p$, respectively. Multiplying both sides of the congruence by $i^{-1}r^{-1}$ and expanding gives:
 $$kr^{-1}+i^{-1}\equiv0\pmod p,$$
 so:
 $$i^{-1}\equiv-k r^{-1}\pmod p.$$
-Since $k=\lfloor p/i\rfloor$ and $r=p\bmod i$:
+The simplification uses $i^{-1}i\equiv1\pmod p$, with the same relationship holding for $r$ and $r^{-1}$. Since $k=\lfloor p/i\rfloor$ and $r=p\bmod i$:
 $$i^{-1}\equiv-\lfloor p/i\rfloor\times(p\bmod i)^{-1}\pmod p.$$
 
 Normalize the possibly negative value in the same way:

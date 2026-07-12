@@ -28,10 +28,11 @@ jobs:
 
       - name: Validate multilingual content
         run: |
-          python -m py_compile ci_tools/check_translation_taxonomy.py ci_tools/check_language_coverage.py ci_tools/check_front_matter_consistency.py
+          python -m py_compile ci_tools/check_translation_taxonomy.py ci_tools/check_language_coverage.py ci_tools/check_front_matter_consistency.py ci_tools/check_content_completeness.py
           python ci_tools/check_translation_taxonomy.py
           python ci_tools/check_language_coverage.py --strict
           python ci_tools/check_front_matter_consistency.py
+          python ci_tools/check_content_completeness.py
 
       - name: Set up latest Node.js LTS
         uses: actions/setup-node@v6

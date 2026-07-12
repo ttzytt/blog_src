@@ -68,30 +68,78 @@ To answer this, we need some knowledge of radiometry. In ray tracing we care abo
 
 ### Basic Units
 
-The physical quantity received by a camera sensor is energy—the number of photons reaching it. This is radiant energy, denoted $Q$, measured in joules. Energy alone does not represent brightness well: photographing the same scene for one minute and for $1/100$ second clearly differs. Dividing received energy by collection time gives radiant flux:
-$$\Phi=\frac{\mathrm dQ}{\mathrm dt}$$
-the energy received per unit time.
+We first need to consider exactly which physical quantity a camera sensor receives. Clearly, it receives energy—or, in other words, a number of photons arriving at the sensor. We therefore regard the physical quantity received by the sensor as radiant energy, denoted by $Q$ and measured in joules.
 
-For a larger sensor, more flux is received in the same time, although the object's brightness has not changed. Divide flux by area to obtain irradiance:
-$$E=\frac{\mathrm d\Phi}{\mathrm dA}.$$
+Energy alone, however, does not represent an object's brightness very well. After all, photographing the same scene with an exposure of one minute and an exposure of $\frac{1}{100}$ second will certainly produce different results.
 
-Likewise, a larger light source supplies more flux, but its flux per unit area is unchanged.
+Although the sensor ultimately receives energy, we can continue obtaining more energy simply by exposing, or integrating, for a longer time while holding the camera.
+
+Naturally, this suggests dividing the received energy by the time spent collecting it. This gives the unit known as radiant flux:
+
+$$
+\Phi = \frac{\mathrm{d}Q}{\mathrm{d}t}
+$$
+
+That is, radiant flux is the energy the sensor can receive per unit time.
+
+Conversely, it can also describe the energy transmitted by a light source per unit time.
+
+This still cannot completely describe an object's brightness. If we use a larger sensor in the camera, the larger sensor can receive more energy per unit time.
+
+Using a larger sensor while observing something cannot change the brightness of the object itself. We must therefore divide the received radiant flux by area, obtaining radiant flux per unit area. This unit is called irradiance.
+
+For a light source, using a larger emitting surface can likewise provide more total radiant flux, while the flux provided per unit area remains unchanged.
+
+$$
+E = \frac{\rm{d}\Phi}{\rm{d}A}
+$$
 
 ![](/img/光追/one_weekend/辐照度.png)
 
-At a greater viewing distance, a larger area is needed to collect the same flux, so irradiance decreases. Yet distant objects do not visibly become much dimmer: they also occupy a smaller apparent area. These effects cancel, so we need solid angle to describe apparent size. Imagine the eye at the center of a sphere. Objects projected onto this sphere occupy an area proportional to their apparent size. Solid angle is the projected area on a unit sphere, measured in steradians:
-$$\Omega=\frac a{R^2},$$
-where $a$ is the projected area on a sphere of radius $R$.
+We find that as the viewing distance increases, a larger area is required to collect the same luminous flux, so irradiance becomes smaller. This plainly conflicts with common experience: as distance increases, the brightness we observe does not decrease significantly. When attenuation does occur, it is mainly because light encounters many tiny particles while propagating.
 
-Using solid angle, radiance describes perceived brightness:
-$$L_\theta=\frac{\mathrm d\Phi}{\mathrm dA\cos(\theta)\mathrm d\Omega}.$$
-Here $A$ is the sensor area. The cosine accounts for the area of the surface projected parallel to the sphere:
+What is happening? Intuitively, although a more distant observer receives less radiant flux, the object also appears smaller to the human eye.
+
+For example, consider a lamp with a very large area and another lamp with a very small area. If they emit the same radiant flux, the smaller lamp is clearly brighter.
+
+Thus, the flux received directly by the eye decreases, but the observed area of the object decreases correspondingly. These two changes cancel, leaving the observed brightness unchanged. We therefore need a physical quantity that describes the apparent size of the object seen by the eye. Dividing irradiance by this quantity will then genuinely describe brightness. That quantity is the solid angle.
+
+We can imagine the eye's field of view as a sphere whose center is the eye. Every point on the sphere is consequently the same distance from the eye. If many equally sized objects are placed on the surface of this sphere, they are the same distance from the eye and therefore appear to have the same size.
+
+Objects at different distances can all be projected onto this sphere. An object whose projection occupies a larger area on the sphere appears larger to the eye.
+
+From the perspective of a light source, we sometimes want to focus on the source's effect in a particular direction—how much it illuminates that direction and how much radiant flux it provides. A solid angle can also be introduced for that analysis.
+
+The solid angle is therefore defined as the projected area of an object on a unit sphere, whose radius is 1.
+
+It is calculated as follows and measured in steradians (sr):
+
+![](/img/光追/one_weekend/立体角.png)
+
+$$
+\Omega = \frac{a}{R^2}
+$$
+
+Here, $a$ is the area projected onto a sphere, which need not be a unit sphere, and $R$ is the sphere's radius.
+
+With the solid angle, we can genuinely describe the apparent size of the object seen by the eye. Modifying irradiance further gives the physical quantity called radiance:
+
+$$
+L_\theta = \frac{\rm{d} \Phi}{\rm{d}A\cos(\theta)\rm{d}\Omega}
+$$
+
+In this formula, $A$ is the area of the photosensitive surface element, and $\Omega$ is the solid angle. The factor $\cos(\theta)$ calculates the area of an object parallel to the spherical surface, as shown below:
 ![](/img/光追/one_weekend/立体角_cos.png)
 
-When $\theta=0$, $\mathrm dA\cos\theta$ is largest; when $\theta=\pi/2$, the surface is perpendicular to the sphere and the projected area is zero.
+Here, $\theta$ is the angle between the object's surface normal and the sphere's normal. When $\theta$ is $0$, $\rm{d}A\cos(\theta)$ is largest. When $\theta$ is $\frac{\pi}{2}$, the object's surface is perpendicular to the spherical surface, so rays emitted from the sphere do not intersect the object at all, and $\rm{d}A\cos(\theta)$ is 0.
 
-Radiance is enough for most surfaces, but a point light has no area. When area is irrelevant and we only want emitted or received flux in a direction, use radiant intensity:
-$$I=\frac{\mathrm d\Phi}{\mathrm d\Omega}.$$
+Radiance already describes the brightness characteristics of most objects quite perfectly. The preceding discussion, however, concerns area light sources or sensors with a nonzero area. A point light has no area, so radiance is meaningless for it because the formula divides by area.
+
+At other times, we may not care about the areas of the light source and sensor and may simply want to know the radiant flux emitted or received in a direction. We then need another physical quantity—radiant intensity—which is obtained by removing the division by area from radiance:
+
+$$
+I = \frac{\rm{d}\Phi}{\rm{d}\Omega}
+$$
 
 ### Lambert's Cosine Law
 

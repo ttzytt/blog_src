@@ -45,6 +45,8 @@ Preserve the structure and delimiters of:
 - Math delimiters and formula contents.
 - Hexo tags such as `{% note %}`, `{% tabs %}`, `{% codeblock %}`, and their closing tags.
 
+The target must retain exactly the same number of fenced code blocks, rendered images, and rendered links as the source, excluding the required machine-warning link. Do not combine adjacent blocks or replace a source structure with prose. Run the project content-completeness validator to verify both these counts and the configured language-pair character ratio.
+
 Never translate syntax tokens, filenames, anchors, URLs, commands, identifiers, API names, or formula variables merely because they resemble natural language.
 
 The required machine-translation warning is a new Hexo block and must remain outside front matter.

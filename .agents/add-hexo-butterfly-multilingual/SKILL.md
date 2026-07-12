@@ -1,6 +1,6 @@
 ---
 name: add-hexo-butterfly-multilingual
-description: Add or maintain isolated multilingual support for a Hexo Butterfly site. Use when Codex must configure language-specific source and URL roots, localize Butterfly UI, preserve same-page language switching, merge builds, migrate custom styling across Butterfly versions, validate translated taxonomies, front matter, and language coverage, or update CI and deployment. Use $translate-hexo-post for individual post or page translations.
+description: Add or maintain isolated multilingual support for a Hexo Butterfly site. Use when Codex must configure language-specific source and URL roots, localize Butterfly UI, preserve same-page language switching, merge builds, migrate custom styling across Butterfly versions, validate translated taxonomy, front matter, body completeness, and language coverage, or update CI and deployment. Use $translate-hexo-post for individual post or page translations.
 ---
 
 # Add Hexo Butterfly Multilingual Support
@@ -177,6 +177,8 @@ Add a second typed Python checker that discovers language source roots from Hexo
 
 Add a third typed Python checker that treats one configured source language as authoritative for paired front matter. Require the same field set, allow only explicitly localized fields such as titles and translated taxonomy to differ, and compare dates, covers, top images, route identity, rendering switches, explicit empty fields, and other operational metadata. Files with no front matter in either language may be skipped; having front matter on only one side is an error.
 
+Add a fourth typed Python checker for body completeness. Configure an explicit directional target/source character coefficient for every supported language direction and calculate `minimum target characters = source characters * coefficient`. For the alphanumeric prose counter, a conservative starting point is `1.5` for `zh-CN -> en` and `1 / 1.5` for `en -> zh-CN`; evaluate other language pairs explicitly. Measure prose after excluding front matter, the mandatory machine-warning block, fenced code, URLs, and markup syntax. Fail when the target prose falls below the calculated minimum. Also require exact equality of fenced code block, rendered image, and rendered link counts, excluding the warning's source-language link. Keep this checker structural and deterministic: it must flag likely omissions without pretending to judge translation quality, and its thresholds must not be weakened to accommodate known incomplete translations.
+
 Use the latest stable Python release supported by the CI runner, pin that version explicitly in CI, compile-check the scripts, and run all validators before building. Use modern type annotations throughout and organize scripts around small parsing, validation, reporting, argument-parsing, and `main() -> int` functions. Prefer the standard library so validation does not require a new dependency environment.
 
 ## Phase 9: Validate
@@ -197,6 +199,7 @@ Verify at minimum:
 - No untranslated default-language post is published under the translated root.
 - Every source tag/category has a CSV mapping and existing counterparts use the mapped values.
 - Every paired front matter field allowed to differ is explicitly localized; all operational metadata matches the source language.
+- Every translated body meets its configured language character coefficient and preserves fenced code block, image, and link counts.
 - The language coverage checker reports no missing files when strict completeness is required.
 - Custom CSS is served with a CSS MIME type and targets the current Butterfly DOM.
 
