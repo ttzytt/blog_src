@@ -10,10 +10,12 @@ uv --directory ci_tools run pytest
 
 The package uses PyYAML for Hexo configuration and front matter, Typer for the
 command line, and Rich for diagnostics. `uv.lock` pins both runtime and
-development dependencies. The original standalone scripts remain in this
-directory as the behavioral comparison baseline; production npm and GitHub
-Actions entry points use the `multilingual-ci` command.
+development dependencies. Production npm and GitHub Actions entry points use
+the `multilingual-ci` command.
 
-The parity suite compares language discovery, skip decisions, parsed taxonomy,
-Markdown metrics, front matter results, and aggregate counts against those
-retained scripts for every current article.
+Tests use isolated Hexo project fixtures so that rule behavior does not depend
+on the repository's current articles.
+
+`skip_multilingual_check: true` is a path-wide opt-out: when any existing
+language variant sets it, taxonomy, coverage, front matter, and content checks
+all skip that relative path.
