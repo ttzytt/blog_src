@@ -21,18 +21,23 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
 
-      - name: Set up latest stable Python
-        uses: actions/setup-python@v6
+      - name: Set up uv and Python
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           python-version: "3.14"
+          enable-cache: true
+          cache-dependency-glob: ci_tools/uv.lock
 
-      - name: Validate multilingual content
+      - name: Install multilingual CI project
+        run: uv sync --project ci_tools --locked --dev
+
+      - name: Test and validate multilingual content
         run: |
-          python -m py_compile ci_tools/check_translation_taxonomy.py ci_tools/check_language_coverage.py ci_tools/check_front_matter_consistency.py ci_tools/check_content_completeness.py
-          python ci_tools/check_translation_taxonomy.py
-          python ci_tools/check_language_coverage.py --strict
-          python ci_tools/check_front_matter_consistency.py
-          python ci_tools/check_content_completeness.py
+          uv --directory ci_tools run ruff check src tests
+          uv --directory ci_tools run ruff format --check src tests
+          uv --directory ci_tools run mypy src tests
+          uv --directory ci_tools run pytest
+          uv --directory ci_tools run multilingual-ci check --project-root ..
 
       - name: Set up latest Node.js LTS
         uses: actions/setup-node@v6

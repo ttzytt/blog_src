@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from check_language_coverage import discover_languages
+from multilingual_front_matter import multilingual_path_is_skipped
 
 
 # Directional target/source character coefficients after removing front matter,
@@ -176,6 +177,7 @@ def main() -> int:
 
     errors: list[str] = []
     pair_count = 0
+    skipped_count = 0
     try:
         for source_path in sorted(source_root.rglob("*.md")):
             relative_path = source_path.relative_to(source_root)
@@ -184,6 +186,9 @@ def main() -> int:
                 if target_language == source_language:
                     continue
                 target_path = target_root / relative_path
+                if multilingual_path_is_skipped(source_path, target_path):
+                    skipped_count += 1
+                    continue
                 if not target_path.is_file():
                     continue
                 pair_count += 1
@@ -208,7 +213,7 @@ def main() -> int:
 
     print(
         f"Content completeness passed: {pair_count} pair(s), "
-        f"source language={source_language}."
+        f"source language={source_language}, skipped={skipped_count}."
     )
     return 0
 

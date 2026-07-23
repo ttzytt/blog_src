@@ -15,7 +15,7 @@ keywords:
 description:
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
-cover: /img/xv6/note/xv6书封面.png
+cover: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 toc:
 toc_number:
 toc_style_simple:

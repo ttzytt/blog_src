@@ -8,6 +8,8 @@ import re
 import sys
 from pathlib import Path
 
+from multilingual_front_matter import multilingual_path_is_skipped
+
 
 type LanguageRoots = dict[str, Path]
 type LanguagePathSets = dict[str, set[Path]]
@@ -78,6 +80,22 @@ def main() -> int:
         path_sets[language] = markdown_paths(source_root)
 
     all_paths = set().union(*path_sets.values())
+    try:
+        skipped_paths = {
+            relative_path
+            for relative_path in all_paths
+            if multilingual_path_is_skipped(
+                *(source_root / relative_path for source_root in languages.values())
+            )
+        }
+    except (OSError, UnicodeError, ValueError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
+        return 1
+    if skipped_paths:
+        all_paths -= skipped_paths
+        path_sets = {
+            language: paths - skipped_paths for language, paths in path_sets.items()
+        }
     warnings: list[str] = []
     for relative_path in sorted(all_paths):
         missing = [language for language, paths in path_sets.items() if relative_path not in paths]
@@ -91,12 +109,16 @@ def main() -> int:
         for warning in warnings:
             print(f"WARNING: {warning}", file=sys.stderr)
         print(
-            f"Language coverage found {len(warnings)} incomplete path(s); {counts}.",
+            f"Language coverage found {len(warnings)} incomplete path(s); {counts}; "
+            f"skipped={len(skipped_paths)}.",
             file=sys.stderr,
         )
         return 1 if args.strict else 0
 
-    print(f"Language coverage passed: {len(all_paths)} shared path(s); {counts}.")
+    print(
+        f"Language coverage passed: {len(all_paths)} shared path(s); {counts}; "
+        f"skipped={len(skipped_paths)}."
+    )
     return 0
 
 

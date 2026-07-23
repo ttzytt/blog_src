@@ -9,6 +9,8 @@ import re
 import sys
 from pathlib import Path
 
+from multilingual_front_matter import multilingual_path_is_skipped
+
 
 REQUIRED_COLUMNS = (
     "type",
@@ -187,10 +189,20 @@ def main() -> int:
     source_files = markdown_files(args.source_root)
     target_files = markdown_files(args.target_root)
     checked_pairs = 0
+    skipped_count = 0
     observed: set[TaxonomyKey] = set()
 
     for relative_path, source_path in sorted(source_files.items()):
         target_path = target_files.get(relative_path)
+        try:
+            if multilingual_path_is_skipped(
+                source_path, *(tuple() if target_path is None else (target_path,))
+            ):
+                skipped_count += 1
+                continue
+        except (OSError, UnicodeError, ValueError) as error:
+            errors.append(f"{relative_path}: {error}")
+            continue
         try:
             source_taxonomy = taxonomy_values(source_path)
         except (OSError, UnicodeError, ValueError) as error:
@@ -243,7 +255,7 @@ def main() -> int:
 
     print(
         f"Taxonomy validation passed: {checked_pairs} file pair(s), "
-        f"{len(observed)} unique tag/category value(s)."
+        f"{len(observed)} unique tag/category value(s), skipped={skipped_count}."
     )
     return 0
 

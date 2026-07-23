@@ -162,4 +162,6 @@ Use the repository-provided typed Python validators rather than duplicating thei
 
 The project-level multilingual skill owns creation and CI integration of these validators; this skill consumes them. If they are absent, report that gap rather than inventing a project-specific layout without authorization.
 
+An article may explicitly opt its entire relative path out of project multilingual validation with the top-level YAML boolean `skip_multilingual_check: true`. Treat this as a deliberate exceptional state, not a routine translation workflow: do not add it merely to bypass a missing, incomplete, structurally inconsistent, or difficult translation. A quoted string such as `"true"` is invalid. When the field is already present, report that the article was skipped and do not claim that its counterpart was validated.
+
 Report the source path, target path, language direction, root-relative source path used by the warning, glossary entries added, validation performed, and any unresolved ambiguity.
