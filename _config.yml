@@ -136,6 +136,14 @@ markdown:
       name: '@neilsustc/markdown-it-katex'
       options:
         strict: false
+    - markdown-it-attrs
+
+# Plotly is loaded only on pages whose Front Matter contains `plotly: true`.
+# Prefer the versioned CDN and fall back to the same version hosted locally.
+plotly:
+  cdn_url: https://cdn.plot.ly/plotly-3.7.0.min.js
+  local_url: /js/vendor/plotly-3.7.0.min.js
+  timeout_ms: 5000
 
 plugins:
   - hexo-reference
