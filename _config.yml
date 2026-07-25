@@ -143,7 +143,16 @@ markdown:
 plotly:
   cdn_url: https://cdn.plot.ly/plotly-3.7.0.min.js
   local_url: /js/vendor/plotly-3.7.0.min.js
+  theme_url: /js/plotly-blog-theme.js
+  stylesheet_url: /css/plotly-blog.css
   timeout_ms: 5000
+  i18n:
+    zh-CN:
+      loading: 图表加载中...
+      load_failed: Plotly 图表加载失败
+    en:
+      loading: Loading chart...
+      load_failed: Failed to load Plotly chart
 
 plugins:
   - hexo-reference

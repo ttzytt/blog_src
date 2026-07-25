@@ -7,6 +7,8 @@ const path = require('node:path');
 
 const DEFAULT_CDN_URL = 'https://cdn.plot.ly/plotly-3.7.0.min.js';
 const DEFAULT_LOCAL_URL = '/js/vendor/plotly-3.7.0.min.js';
+const DEFAULT_THEME_URL = '/js/plotly-blog-theme.js';
+const DEFAULT_STYLESHEET_URL = '/css/plotly-blog.css';
 const DEFAULT_TIMEOUT_MS = 5000;
 const PLOTLY_LOADER_MARKER = 'data-plotly-loader';
 const PLOTLY_CHART_MARKER = 'data-plotly-chart';
@@ -62,14 +64,63 @@ function plotlyConfig() {
   return {
     cdnUrl: config.cdn_url || DEFAULT_CDN_URL,
     localUrl: config.local_url || DEFAULT_LOCAL_URL,
+    themeUrl: config.theme_url || DEFAULT_THEME_URL,
+    stylesheetUrl: config.stylesheet_url || DEFAULT_STYLESHEET_URL,
     timeoutMs
   };
 }
 
-function plotlyLoaderHtml() {
-  const { cdnUrl, localUrl, timeoutMs } = plotlyConfig();
+function registerPlotlyTranslations() {
+  const translations = hexo.config.plotly?.i18n;
+  if (!translations || typeof translations !== 'object') return;
 
-  return `<script ${PLOTLY_LOADER_MARKER}>
+  for (const [language, messages] of Object.entries(translations)) {
+    if (!messages || typeof messages !== 'object') continue;
+
+    // hexo-i18n's set() replaces a locale instead of merging it. Preserve the
+    // Butterfly translations already loaded for that locale before adding the
+    // project-owned Plotly namespace.
+    const existing = hexo.theme.i18n.get(language);
+    hexo.theme.i18n.set(language, {
+      ...existing,
+      plotly: messages
+    });
+  }
+}
+
+function plotlyTranslation(context, key) {
+  registerPlotlyTranslations();
+
+  const configuredLanguages = Array.isArray(hexo.config.language)
+    ? hexo.config.language
+    : [hexo.config.language];
+  const languages = [
+    context?.lang,
+    context?.language,
+    ...configuredLanguages,
+    'default'
+  ].filter(Boolean);
+
+  return hexo.theme.i18n._p([...new Set(languages)])(`plotly.${key}`);
+}
+
+// Theme language files are processed after project scripts are loaded. Merge
+// custom translations immediately before every build (including live rebuilds)
+// so Butterfly's locale data is present and remains intact.
+hexo.on('generateBefore', registerPlotlyTranslations);
+
+function plotlyLoaderHtml() {
+  const {
+    cdnUrl,
+    localUrl,
+    themeUrl,
+    stylesheetUrl,
+    timeoutMs
+  } = plotlyConfig();
+
+  return `<link rel="stylesheet" href="${escapeHtmlAttribute(stylesheetUrl)}" data-plotly-styles>
+<script src="${escapeHtmlAttribute(themeUrl)}" data-plotly-theme></script>
+<script ${PLOTLY_LOADER_MARKER}>
 (() => {
   if (window.plotlyReady) return;
 
@@ -184,20 +235,32 @@ hexo.extend.tag.register('plotly', async function plotlyTag(args) {
   const safeCode = code.replace(/<\/script/giu, '<\\/script');
   const safeChartId = escapeHtmlAttribute(chartId);
   const chartIdLiteral = JSON.stringify(chartId);
+  const loadingText = plotlyTranslation(this, 'loading');
+  const failureText = plotlyTranslation(this, 'load_failed');
+  const failureTextLiteral = serializeForInlineScript(failureText);
 
   return [
-    `<div id="${safeChartId}" ${PLOTLY_CHART_MARKER} style="width:100%;height:${height}px"></div>`,
+    `<div id="${safeChartId}" ${PLOTLY_CHART_MARKER} aria-busy="true" style="width:100%;height:${height}px">`,
+    '  <div class="plotly-chart__loading" role="status" aria-live="polite">',
+    '    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>',
+    `    <span>${escapeHtmlAttribute(loadingText)}</span>`,
+    '  </div>',
+    '</div>',
     '<script>',
     '(() => {',
     `  const target = document.getElementById(${chartIdLiteral});`,
     '  const ready = window.plotlyReady || Promise.reject(new Error(\'Plotly loader was not initialized\'));',
     '  ready.then(() => {',
     '    if (!target) throw new Error(\'Plotly chart container was not found\');',
+    '    const loading = target.querySelector(\'.plotly-chart__loading\');',
     safeCode,
+    '    loading?.remove();',
+    '    target.setAttribute(\'aria-busy\', \'false\');',
     '  }).catch(error => {',
     `    console.error('[Plotly] Failed to render chart ${chartIdLiteral}.', error);`,
     '    if (target) {',
-    '      target.textContent = \'Plotly 图表加载失败\';',
+    `      target.textContent = ${failureTextLiteral};`,
+    '      target.setAttribute(\'aria-busy\', \'false\');',
     '      target.setAttribute(\'role\', \'alert\');',
     '    }',
     '  });',

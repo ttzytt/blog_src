@@ -21,4 +21,4 @@ $$
 
 拖动滑块可以实时改变振幅 $A$ 和频率 $\omega$。
 
-{% plotly sine-wave source/grpah_code/plotly_test.js 500 %}
+{% plotly sine-wave source/graph_code/plotly_test/plotly_test.js 500 %}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Hexo Plotly Chart"
+  short_description: "Build themed Plotly charts for this Hexo blog"
+  default_prompt: "Use $add-hexo-plotly-chart to add a themed interactive Plotly chart to a Hexo post."
