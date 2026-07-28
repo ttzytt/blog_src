@@ -1,6 +1,6 @@
 ---
 title: "LR 系统的 PWM 控制分析"
-date: 2024-07-28
+date: 2026-07-28
 updated:
 tags:
 - 数学
