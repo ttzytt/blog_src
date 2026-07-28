@@ -29,7 +29,7 @@ aplayer:
 highlight_shrink:
 aside:
 skip_multilingual_check: true
-published: false
+published: true
 ---
 
 ## 问题概览
