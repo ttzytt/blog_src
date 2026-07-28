@@ -35,8 +35,71 @@ plotly_mathjax: true
 - Hexo 在构建时读取并内联图表代码；修改图表文件后如果预览没有更新，
   需要先运行 `hexo clean`。
 
-图表文件可以直接使用 `target`、`Plotly` 和 `BlogPlotly`。其中 `target`
-是 tag 创建的图表容器。
+图表文件可以直接使用 `target`、`Plotly`、`BlogPlotly` 和
+`chartI18n`。其中 `target` 是 tag 创建的图表容器。
+
+## 图表多语言
+
+每张图仍只维护一份 JavaScript。需要翻译的文字放在与图表脚本同目录、
+同名的 `.i18n.yml` 中。例如：
+
+```text
+source/graph_code/post-name/chart.js
+source/graph_code/post-name/chart.i18n.yml
+```
+
+翻译文件使用扁平键值结构：
+
+```yaml
+default: zh-CN
+zh-CN:
+  dutyCycle: 占空比
+  timeConstant: 时间常数
+en:
+  dutyCycle: Duty cycle
+  timeConstant: Time constant
+```
+
+构建时，Plotly tag 按以下顺序选择语言：
+
+1. tag 的 `lang` 选项；
+2. 文章 Front Matter 的 `lang` 或 `language`；
+3. 当前 Hexo 配置的 `language`；
+4. 翻译文件的 `default`。
+
+地区语言会自动回退到基础语言，例如找不到 `en-US` 时继续尝试 `en`。
+一般不需要在 tag 中指定语言；中英文站点使用各自配置构建时会自动选择。
+只有需要覆盖文章或站点语言时才使用：
+
+```text
+{% plotly chart-id source/graph_code/post-name/chart.js 420 lang=en %}
+```
+
+图表脚本通过 `chartI18n.text` 读取专用文案，通过
+`chartI18n.common` 读取共享文案：
+
+```js
+const { common, text } = chartI18n;
+
+BlogPlotly.createRangeControls(target, [
+  { label: text.dutyCycle, /* ... */ }
+], {
+  separator: common.controlSeparator
+});
+
+const buttons = BlogPlotly.axisScaleButtons({
+  labels: {
+    logarithmic: common.logarithmicScale,
+    linear: common.linearScale
+  }
+});
+```
+
+共享的加载提示、失败提示、坐标切换按钮和控件分隔符定义在
+`_config.yml` 的 `plotly_i18n` 中；单张图专有的标题、轴名、图例和控件名称
+放在对应的 `.i18n.yml` 中。构建会检查同一翻译文件中的所有语言是否具有
+相同的键，缺键或非字符串值会直接报错。翻译源文件只参与构建，不会复制到
+公开站点。
 
 ## 加载流程
 

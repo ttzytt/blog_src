@@ -1,0 +1,11 @@
+default: zh-CN
+zh-CN:
+  lowFrequencyLinearLimit: 低频线性极限
+  highFrequencyQuadraticLimit: 高频平方极限
+  ribbonPlot: Ribbon 图
+  contourPlot: 等高线图
+en:
+  lowFrequencyLinearLimit: Low-frequency linear limit
+  highFrequencyQuadraticLimit: High-frequency quadratic limit
+  ribbonPlot: Ribbon Plot
+  contourPlot: Contour Plot

@@ -42,12 +42,18 @@ Preserve the structure and delimiters of:
 - Markdown and HTML links; translate labels and preserve external destinations. Keep site-local destinations root-relative and free of production hostnames.
 - Images; translate alt text when meaningful but preserve paths and attributes.
 - Raw HTML tags and attributes that are not reader-visible prose.
-- Math delimiters and formula contents.
+- Math delimiters, TeX commands, variables, operators, alignment, and formula structure.
 - Hexo tags such as `{% note %}`, `{% tabs %}`, `{% codeblock %}`, and their closing tags.
 
 The target must retain exactly the same number of fenced code blocks, rendered images, and rendered links as the source, excluding the required machine-warning link. Do not combine adjacent blocks or replace a source structure with prose. Run the project content-completeness validator to verify both these counts and the configured language-pair character ratio.
 
-Never translate syntax tokens, filenames, anchors, URLs, commands, identifiers, API names, or formula variables merely because they resemble natural language.
+Translate reader-visible natural-language content inside formulas, including prose in
+`\text{...}`, `\mbox{...}`, `\textrm{...}`, or equivalent text-bearing commands. Preserve the
+surrounding command, spacing, delimiters, variables, operators, alignment markers, and formula
+structure. Never translate syntax tokens, filenames, anchors, URLs, commands, identifiers, API
+names, standard mathematical operator names, units, or formula variables merely because they
+resemble natural language. Scan target math for remaining source-language characters before
+finishing.
 
 The required machine-translation warning is a new Hexo block and must remain outside front matter.
 

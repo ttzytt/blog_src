@@ -1,0 +1,21 @@
+default: zh-CN
+zh-CN:
+  frequency: 频率
+  frequencyLogarithmicAria: 频率 f（对数调节）
+  timeConstant: 时间常数
+  dcPower: 直流功耗
+  dutyCycle: 占空比
+  periodAveragePower: 周期平均功率
+  linearReference: 线性参考
+  quadraticReference: 平方参考
+  power: 功率
+en:
+  frequency: Frequency
+  frequencyLogarithmicAria: Frequency f (logarithmic control)
+  timeConstant: Time constant
+  dcPower: DC power
+  dutyCycle: Duty cycle
+  periodAveragePower: Period-average power
+  linearReference: Linear reference
+  quadraticReference: Quadratic reference
+  power: Power

@@ -1,0 +1,7 @@
+default: zh-CN
+zh-CN:
+  amplitude: 振幅
+  frequency: 频率
+en:
+  amplitude: Amplitude
+  frequency: Frequency

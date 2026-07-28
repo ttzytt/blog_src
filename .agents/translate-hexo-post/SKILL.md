@@ -1,6 +1,6 @@
 ---
 name: translate-hexo-post
-description: Translate or update one Hexo Markdown post or page between language source trees while preserving copied front matter and complete Markdown/Hexo structure. Use after writing a page in any language to create its counterpart, maintain exact CSV-backed taxonomy and terminology mappings, translate every prose block and code comment, preserve code-fence/image/link counts, satisfy configured language character-ratio checks, add a root-relative machine-translation warning, and run all project multilingual validators.
+description: Translate or update one Hexo Markdown post or page between language source trees while preserving copied front matter and complete Markdown/Hexo structure. Use after writing a page in any language to create its counterpart, maintain exact CSV-backed taxonomy and terminology mappings, translate every prose block, formula annotation, and code comment, preserve code-fence/image/link counts, satisfy configured language character-ratio checks, add a root-relative machine-translation warning, and run all project multilingual validators.
 ---
 
 # Translate a Hexo Post
@@ -28,7 +28,7 @@ Discover the default source directory from `_config.yml` and additional source d
 1. Read the complete source before translating.
 2. Separate front matter, Markdown prose, protected syntax, code, math, raw HTML, and Hexo tags.
 3. Load the persistent CSV taxonomy and terminology glossary.
-4. Scan the whole article for categories, tags, proper nouns, technical terms, repeated phrases, code comments, and meaningful source-language strings in code.
+4. Scan the whole article for categories, tags, proper nouns, technical terms, repeated phrases, code comments, meaningful source-language strings in code, natural-language text inside formulas, and reader-visible text in editable charts or other generated visualizations.
 5. Resolve new taxonomy and terminology mappings before translating prose. Reuse locked mappings exactly. Record new mappings.
 6. Copy the complete source front matter verbatim, then change only fields that the project permits to be localized. Never construct a shortened target front matter.
 7. Translate the body faithfully. For a long article, split only at safe Markdown block boundaries and apply the same locked glossary to every chunk.
@@ -46,9 +46,51 @@ Discover the default source directory from `_config.yml` and additional source d
 - Do not silently correct factual, technical, or stylistic mistakes. Report a suspected source error separately without changing its meaning.
 - Preserve paragraph and sentence correspondence where the target language permits.
 - Preserve all Markdown and Hexo structures. Translate reader-visible prose, headings, link labels, image alt text, table prose, and captions.
-- Preserve URLs, link destinations, anchors, image paths, filenames, identifiers, commands, math, and non-comment code unless a rule below explicitly permits a change.
+- Preserve URLs, link destinations, anchors, image paths, filenames, identifiers, commands, mathematical structure, and non-comment code unless a rule below explicitly permits a change.
 
 The warning and generated code-string annotations are the only mandatory additions to source content.
+
+## Natural language inside formulas
+
+Translate reader-visible natural-language text inside math while preserving the formula's
+mathematical meaning and TeX structure. This includes prose in `\text{...}`, `\mbox{...}`,
+`\textrm{...}`, and equivalent text-bearing commands, as well as natural-language labels
+written directly in a formula.
+
+Do not translate formula variables, standard operator names, identifiers, units, delimiters,
+commands, alignment markers, subscripts such as `min` and `max`, or symbolic annotations merely
+because they resemble words. Change only the natural-language payload. For example:
+
+```text
+\quad \text{分子分母同除} \space e^{-k}
+```
+
+becomes:
+
+```text
+\quad \text{divide the numerator and denominator by} \space e^{-k}
+```
+
+After translation, scan the target's inline and display math for remaining source-language
+characters. Review every match explicitly rather than assuming math is protected wholesale.
+
+## Editable visualizations
+
+Translate reader-visible text in visualizations when the repository contains an editable source
+or localization mechanism for them. Examples include Plotly charts, generated SVGs, diagrams,
+and other code-defined graphics whose titles, axes, legends, annotations, controls, hover text,
+or accessibility labels can be localized without changing their data or logic.
+
+Prefer a shared implementation with language data selected by the page or build. For example,
+reuse one Plotly JavaScript file and add or extend its adjacent `.i18n.yml` rather than copying
+the complete chart for the target language. Preserve the visualization's formulas, data,
+interactions, identifiers, and behavior unless the user separately requests a functional change.
+
+Do not edit or recreate a raster image such as PNG or JPEG merely to translate text embedded in
+its pixels. Preserve the image file and path, translate its Markdown alt text or surrounding
+caption when applicable, and report any important untranslated text that remains baked into the
+image. Apply the same rule to another asset whose editable source is unavailable or whose
+localization would require recreating the visual.
 
 ## Content completeness gate
 
@@ -142,7 +184,11 @@ Before finishing, verify all of the following:
 - Fenced code block, rendered image, and rendered link counts exactly match the source after excluding the machine warning.
 - Code comments are translated.
 - Meaningful source-language strings in code have syntax-valid `[generated by LLM]` annotations.
-- URLs, paths, anchors, code, math, raw HTML structure, and Hexo tag structure remain valid.
+- Natural-language prose and labels inside formulas are translated while variables, operators,
+  mathematical structure, and TeX syntax remain intact.
+- Reader-visible text in editable visualizations is translated through the existing localization
+  mechanism or a shared language-data layer; non-editable raster assets are preserved.
+- URLs, paths, anchors, code, mathematical structure, raw HTML structure, and Hexo tag structure remain valid.
 - No unsolicited rewriting, polishing, explanation, or factual correction was introduced.
 - The taxonomy validator passes for the new pair.
 - The front matter consistency validator passes for the new pair.

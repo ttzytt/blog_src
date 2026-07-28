@@ -110,6 +110,7 @@ include:
 - ".nojekyll"
 exclude:
 - "files/photo_portfolio/2024-10-12/self_contained.html"
+- "**/*.i18n.yml"
 ignore:
 - "files/photo_portfolio/2024-10-12/self_contained.html"
 
@@ -153,9 +154,15 @@ plotly:
     zh-CN:
       loading: 图表加载中...
       load_failed: Plotly 图表加载失败
+      logarithmic_scale: 对数坐标
+      linear_scale: 线性坐标
+      control_separator: "："
     en:
       loading: Loading chart...
       load_failed: Failed to load Plotly chart
+      logarithmic_scale: Log scale
+      linear_scale: Linear scale
+      control_separator: ": "
 
 plugins:
   - hexo-reference

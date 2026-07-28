@@ -1,6 +1,6 @@
 ---
 name: add-hexo-plotly-chart
-description: Add, modify, or debug interactive Plotly charts in this Hexo Butterfly blog. Use when Codex must enable Plotly or optional Plotly MathJax through post front matter, embed chart code with the custom Hexo tag, create chart files under graph_code or another approved folder, add sliders, scale-switching buttons, or reference curves, reuse the shared light/dark theme and controls, diagnose Plotly build or preview warnings, or validate CDN/local fallback behavior.
+description: Add, modify, localize, or debug interactive Plotly charts in this Hexo Butterfly blog. Use when Codex must enable Plotly or optional Plotly MathJax through post front matter, embed chart code with the custom Hexo tag, create chart files under graph_code or another approved folder, add sliders, scale-switching buttons, reference curves, or adjacent i18n data for multilingual posts, reuse the shared light/dark theme and controls, diagnose Plotly build or preview warnings, or validate CDN/local fallback behavior.
 ---
 
 # Add Hexo Plotly Chart
@@ -16,6 +16,8 @@ Before editing, read the current versions of:
 - `source/css/plotly-blog.css`.
 - `source/js/plotly-blog-theme.js`.
 - The target post and the closest existing chart under `source/graph_code/`.
+- For a multilingual chart, the closest existing `.i18n.yml` and the
+  `plotly_i18n` section in `_config.yml`.
 
 Treat those files as the source of truth; this skill records conventions, not frozen implementations. Inspect `git status` and preserve unrelated work.
 
@@ -61,7 +63,8 @@ Never edit generated files under `public/`, installed packages under `node_modul
    for MathJax when `plotly_mathjax: true`. Multiple charts on one page share
    one Plotly 3.7 loader and, when enabled, one MathJax 3 loader.
 
-4. Keep chart files focused on data and rendering. The execution environment provides `target`, `Plotly`, and `BlogPlotly`.
+4. Keep chart files focused on data and rendering. The execution environment provides
+   `target`, `Plotly`, `BlogPlotly`, and `chartI18n`.
 
 5. Use the shared helpers:
 
@@ -126,6 +129,66 @@ Never edit generated files under `public/`, installed packages under `node_modul
 8. If a reusable visual token or control style is missing, extend `source/css/plotly-blog.css` for both light and dark modes. If reusable behavior is missing, extend `source/js/plotly-blog-theme.js`. Keep article-specific mathematics and traces in the chart file.
 
 9. Give controls meaningful labels, units, limits, steps, defaults, and accessible names. Handle boundary values explicitly, such as duty cycles of zero and one or equal initial/final values.
+
+## Add multilingual chart text
+
+When a chart appears in translated posts, keep one JavaScript implementation and place
+reader-visible chart text in an adjacent file with the same basename:
+
+```text
+source/graph_code/<post-name>/<chart-name>.js
+source/graph_code/<post-name>/<chart-name>.i18n.yml
+```
+
+Use a flat mapping and define the same keys for every locale:
+
+```yaml
+default: zh-CN
+zh-CN:
+  dutyCycle: 占空比
+  power: 功率
+en:
+  dutyCycle: Duty cycle
+  power: Power
+```
+
+Read the selected messages from `chartI18n`:
+
+```js
+const { common, text } = chartI18n;
+
+BlogPlotly.createRangeControls(target, [
+  {
+    key: 'dutyCycle',
+    label: text.dutyCycle,
+    mathLabel: 'D',
+    min: 0,
+    max: 1,
+    step: 0.01,
+    value: 0.5
+  }
+], {
+  separator: common.controlSeparator
+});
+```
+
+Localize titles, axis labels, legends, annotations, hover text, controls, scale-switching
+buttons, and accessibility labels. Use `chartI18n.common.linearScale` and
+`chartI18n.common.logarithmicScale` for `axisScaleButtons()` labels. Keep common loading,
+failure, scale-button, and separator translations in `_config.yml` under `plotly_i18n`;
+keep chart-specific text in the adjacent file.
+
+The tag selects the locale from an explicit `lang=...` option, article language, or current
+Hexo site language, with the translation file's `default` as fallback. Usually reuse the
+same tag in both language trees without an override:
+
+```text
+{% plotly chart-id source/graph_code/<post-name>/<chart-name>.js 400 %}
+```
+
+Use `lang=en` only when a chart must override the article or site language. Do not create a
+second chart JavaScript file solely for translation. A monolingual chart does not require an
+`.i18n.yml`, but add one before creating a translated counterpart.
 
 ## Add logarithmic and linear scale switching
 
@@ -194,8 +257,11 @@ npx hexo generate --config _config.yml,config-zh.yml --draft --bail
 ```
 
 Inspect the generated HTML for the chart id, `data-plotly-chart`, the expected
-`data-plotly-mathjax` value, shared CSS/helper references, and exactly one
-`data-plotly-loader`. After draft validation, clean and run the normal
+`data-plotly-mathjax` and `data-plotly-locale` values, the selected
+`chartI18n` messages, shared CSS/helper references, and exactly one
+`data-plotly-loader`. For multilingual charts, inspect at least one generated
+page for each supported locale and confirm that `.i18n.yml` files are not
+published as static assets. After draft validation, clean and run the normal
 multilingual build so unpublished output does not remain:
 
 ```text

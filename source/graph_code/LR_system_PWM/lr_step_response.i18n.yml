@@ -1,0 +1,9 @@
+default: zh-CN
+zh-CN:
+  timeConstant: 时间常数
+  initialCurrent: 初始电流
+  dcSteadyStateCurrent: 直流稳态电流
+en:
+  timeConstant: Time constant
+  initialCurrent: Initial current
+  dcSteadyStateCurrent: DC steady-state current

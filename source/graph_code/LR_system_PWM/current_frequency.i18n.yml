@@ -1,0 +1,13 @@
+default: zh-CN
+zh-CN:
+  dutyCycle: 占空比
+  timeConstant: 时间常数
+  dcSteadyStateCurrent: 直流稳态电流
+  periodPeakCurrent: 周期峰值电流
+  periodValleyCurrent: 周期谷值电流
+en:
+  dutyCycle: Duty cycle
+  timeConstant: Time constant
+  dcSteadyStateCurrent: DC steady-state current
+  periodPeakCurrent: Cycle peak current
+  periodValleyCurrent: Cycle valley current

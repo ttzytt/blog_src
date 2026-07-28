@@ -1,0 +1,9 @@
+default: zh-CN
+zh-CN:
+  dutyCycle: 占空比
+  period: 周期
+  highLevelVoltage: 高电平电压
+en:
+  dutyCycle: Duty cycle
+  period: Period
+  highLevelVoltage: High-level voltage
