@@ -9,6 +9,7 @@ categories:
   - 测试
 description: 使用 Plotly 绘制可调节振幅和频率的正弦函数。
 plotly: true
+plotly_mathjax: true
 comments: false
 skip_multilingual_check: true
 ---

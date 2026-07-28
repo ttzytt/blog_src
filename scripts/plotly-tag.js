@@ -7,6 +7,8 @@ const path = require('node:path');
 
 const DEFAULT_CDN_URL = 'https://cdn.plot.ly/plotly-3.7.0.min.js';
 const DEFAULT_LOCAL_URL = '/js/vendor/plotly-3.7.0.min.js';
+const DEFAULT_MATHJAX_CDN_URL = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js';
+const DEFAULT_MATHJAX_LOCAL_URL = '/js/vendor/mathjax-3.2.2-tex-svg.js';
 const DEFAULT_THEME_URL = '/js/plotly-blog-theme.js';
 const DEFAULT_STYLESHEET_URL = '/css/plotly-blog.css';
 const DEFAULT_TIMEOUT_MS = 5000;
@@ -64,6 +66,8 @@ function plotlyConfig() {
   return {
     cdnUrl: config.cdn_url || DEFAULT_CDN_URL,
     localUrl: config.local_url || DEFAULT_LOCAL_URL,
+    mathJaxCdnUrl: config.mathjax_cdn_url || DEFAULT_MATHJAX_CDN_URL,
+    mathJaxLocalUrl: config.mathjax_local_url || DEFAULT_MATHJAX_LOCAL_URL,
     themeUrl: config.theme_url || DEFAULT_THEME_URL,
     stylesheetUrl: config.stylesheet_url || DEFAULT_STYLESHEET_URL,
     timeoutMs
@@ -109,10 +113,12 @@ function plotlyTranslation(context, key) {
 // so Butterfly's locale data is present and remains intact.
 hexo.on('generateBefore', registerPlotlyTranslations);
 
-function plotlyLoaderHtml() {
+function plotlyLoaderHtml(mathJaxEnabled) {
   const {
     cdnUrl,
     localUrl,
+    mathJaxCdnUrl,
+    mathJaxLocalUrl,
     themeUrl,
     stylesheetUrl,
     timeoutMs
@@ -120,17 +126,20 @@ function plotlyLoaderHtml() {
 
   return `<link rel="stylesheet" href="${escapeHtmlAttribute(stylesheetUrl)}" data-plotly-styles>
 <script src="${escapeHtmlAttribute(themeUrl)}" data-plotly-theme></script>
-<script ${PLOTLY_LOADER_MARKER}>
+<script ${PLOTLY_LOADER_MARKER} data-plotly-mathjax="${mathJaxEnabled}">
 (() => {
-  if (window.plotlyReady) return;
+  if (window.plotlyMathReady) return;
 
+  const mathJaxEnabled = ${serializeForInlineScript(mathJaxEnabled)};
   const cdnUrl = ${serializeForInlineScript(cdnUrl)};
   const localUrl = ${serializeForInlineScript(localUrl)};
+  const mathJaxCdnUrl = ${serializeForInlineScript(mathJaxCdnUrl)};
+  const mathJaxLocalUrl = ${serializeForInlineScript(mathJaxLocalUrl)};
   const timeoutMs = ${serializeForInlineScript(timeoutMs)};
 
-  const loadScript = (source, timeout) => new Promise((resolve, reject) => {
-    if (window.Plotly) {
-      resolve(window.Plotly);
+  const loadScript = (source, timeout, isReady, label) => new Promise((resolve, reject) => {
+    if (isReady()) {
+      resolve();
       return;
     }
 
@@ -163,25 +172,77 @@ function plotlyLoaderHtml() {
     script.async = true;
     script.dataset.plotlySource = source;
     script.onload = () => {
-      if (window.Plotly) {
+      if (isReady()) {
         succeed();
       } else {
-        fail('Plotly script loaded without exposing window.Plotly: ' + source);
+        fail(label + ' loaded without exposing its browser API: ' + source);
       }
     };
-    script.onerror = () => fail('Failed to load Plotly script: ' + source);
+    script.onerror = () => fail('Failed to load ' + label + ': ' + source);
 
     document.head.appendChild(script);
     timer = window.setTimeout(
-      () => fail('Timed out loading Plotly script after ' + timeout + 'ms: ' + source),
+      () => fail('Timed out loading ' + label + ' after ' + timeout + 'ms: ' + source),
       timeout
     );
   });
 
-  window.plotlyReady = loadScript(cdnUrl, timeoutMs).catch(cdnError => {
-    console.warn('[Plotly] CDN unavailable or slow; trying the local fallback.', cdnError);
-    return loadScript(localUrl, timeoutMs);
-  });
+  const loadWithFallback = (cdnSource, localSource, isReady, label) => (
+    loadScript(cdnSource, timeoutMs, isReady, label).catch(cdnError => {
+      console.warn(
+        '[Plotly] ' + label + ' CDN unavailable or slow; trying the local fallback.',
+        cdnError
+      );
+      return loadScript(localSource, timeoutMs, isReady, label);
+    })
+  );
+
+  const plotlyIsReady = () => Boolean(window.Plotly);
+  const mathJaxIsReady = () => {
+    const version = window.MathJax && window.MathJax.version;
+    const majorVersion = Number.parseInt((version || '').split('.')[0], 10);
+    return majorVersion === 3 && typeof window.MathJax.typesetPromise === 'function';
+  };
+
+  if (mathJaxEnabled && (!window.MathJax || !window.MathJax.version)) {
+    const existingConfig = window.MathJax || {};
+    window.MathJax = {
+      ...existingConfig,
+      tex: {
+        ...existingConfig.tex,
+        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']]
+      },
+      svg: {
+        ...existingConfig.svg,
+        fontCache: 'local'
+      }
+    };
+  }
+
+  window.plotlyReady = window.plotlyReady || loadWithFallback(
+    cdnUrl,
+    localUrl,
+    plotlyIsReady,
+    'Plotly'
+  ).then(() => window.Plotly);
+
+  if (mathJaxEnabled) {
+    window.mathJaxReady = window.mathJaxReady || loadWithFallback(
+      mathJaxCdnUrl,
+      mathJaxLocalUrl,
+      mathJaxIsReady,
+      'MathJax'
+    ).then(() => window.MathJax.startup.promise)
+      .then(() => window.MathJax);
+
+    window.plotlyMathReady = Promise.all([
+      window.plotlyReady,
+      window.mathJaxReady
+    ]).then(([plotly]) => plotly);
+  } else {
+    window.mathJaxReady = window.mathJaxReady || Promise.resolve(null);
+    window.plotlyMathReady = window.plotlyReady;
+  }
 })();
 </script>`;
 }
@@ -191,12 +252,18 @@ function plotlyLoaderHtml() {
 hexo.extend.filter.register('after_render:html', function injectPlotly(html, locals) {
   const pageOptedIn = locals?.page?.plotly === true;
   const containsChart = html.includes(PLOTLY_CHART_MARKER);
+  const mathJaxEnabled =
+    locals?.page?.plotly_mathjax === true ||
+    html.includes('data-plotly-mathjax="true"');
 
   if ((!pageOptedIn && !containsChart) || html.includes(PLOTLY_LOADER_MARKER)) {
     return html;
   }
 
-  return html.replace('</head>', `${plotlyLoaderHtml()}\n</head>`);
+  return html.replace(
+    '</head>',
+    () => `${plotlyLoaderHtml(mathJaxEnabled)}\n</head>`
+  );
 });
 
 // Usage:
@@ -238,9 +305,10 @@ hexo.extend.tag.register('plotly', async function plotlyTag(args) {
   const loadingText = plotlyTranslation(this, 'loading');
   const failureText = plotlyTranslation(this, 'load_failed');
   const failureTextLiteral = serializeForInlineScript(failureText);
+  const mathJaxEnabled = this.plotly_mathjax === true;
 
   return [
-    `<div id="${safeChartId}" ${PLOTLY_CHART_MARKER} aria-busy="true" style="width:100%;height:${height}px">`,
+    `<div id="${safeChartId}" ${PLOTLY_CHART_MARKER} data-plotly-mathjax="${mathJaxEnabled}" aria-busy="true" style="width:100%;height:${height}px">`,
     '  <div class="plotly-chart__loading" role="status" aria-live="polite">',
     '    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>',
     `    <span>${escapeHtmlAttribute(loadingText)}</span>`,
@@ -249,13 +317,16 @@ hexo.extend.tag.register('plotly', async function plotlyTag(args) {
     '<script>',
     '(() => {',
     `  const target = document.getElementById(${chartIdLiteral});`,
-    '  const ready = window.plotlyReady || Promise.reject(new Error(\'Plotly loader was not initialized\'));',
+    '  const ready = window.plotlyMathReady || Promise.reject(new Error(\'Plotly loader was not initialized\'));',
     '  ready.then(() => {',
     '    if (!target) throw new Error(\'Plotly chart container was not found\');',
     '    const loading = target.querySelector(\'.plotly-chart__loading\');',
     safeCode,
-    '    loading?.remove();',
-    '    target.setAttribute(\'aria-busy\', \'false\');',
+    '    const renderReady = target.plotlyRenderReady || Promise.resolve();',
+    '    return renderReady.then(() => {',
+    '      loading?.remove();',
+    '      target.setAttribute(\'aria-busy\', \'false\');',
+    '    });',
     '  }).catch(error => {',
     `    console.error('[Plotly] Failed to render chart ${chartIdLiteral}.', error);`,
     '    if (target) {',

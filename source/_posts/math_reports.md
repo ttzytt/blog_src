@@ -15,7 +15,7 @@ keywords:
 description:
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
-cover: 'linear-gradient(to right, #2c3e50, #4ca1af)'
+cover:
 toc:
 toc_number:
 toc_style_simple:
