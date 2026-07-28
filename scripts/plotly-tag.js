@@ -5,13 +5,13 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
-const DEFAULT_CDN_URL = 'https://cdn.plot.ly/plotly-3.7.0.min.js';
+const DEFAULT_CDN_URL = 'https://cdn.jsdelivr.net/npm/plotly.js@3.7.0/dist/plotly.min.js';
 const DEFAULT_LOCAL_URL = '/js/vendor/plotly-3.7.0.min.js';
 const DEFAULT_MATHJAX_CDN_URL = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js';
 const DEFAULT_MATHJAX_LOCAL_URL = '/js/vendor/mathjax-3.2.2-tex-svg.js';
 const DEFAULT_THEME_URL = '/js/plotly-blog-theme.js';
 const DEFAULT_STYLESHEET_URL = '/css/plotly-blog.css';
-const DEFAULT_TIMEOUT_MS = 5000;
+const DEFAULT_TIMEOUT_MS = 10000;
 const PLOTLY_LOADER_MARKER = 'data-plotly-loader';
 const PLOTLY_CHART_MARKER = 'data-plotly-chart';
 
@@ -144,11 +144,15 @@ function plotlyLoaderHtml(mathJaxEnabled) {
     }
 
     const script = document.createElement('script');
+    const hasTimeout = Number.isFinite(timeout) && timeout > 0;
     let settled = false;
-    let timer;
+    let timer = null;
 
     const cleanUp = () => {
-      window.clearTimeout(timer);
+      if (timer !== null) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
       script.onload = null;
       script.onerror = null;
     };
@@ -181,10 +185,12 @@ function plotlyLoaderHtml(mathJaxEnabled) {
     script.onerror = () => fail('Failed to load ' + label + ': ' + source);
 
     document.head.appendChild(script);
-    timer = window.setTimeout(
-      () => fail('Timed out loading ' + label + ' after ' + timeout + 'ms: ' + source),
-      timeout
-    );
+    if (hasTimeout) {
+      timer = window.setTimeout(
+        () => fail('Timed out loading ' + label + ' after ' + timeout + 'ms: ' + source),
+        timeout
+      );
+    }
   });
 
   const loadWithFallback = (cdnSource, localSource, isReady, label) => (
@@ -194,6 +200,22 @@ function plotlyLoaderHtml(mathJaxEnabled) {
         cdnError
       );
       return loadScript(localSource, timeoutMs, isReady, label);
+    })
+  );
+
+  const loadPlotlyWithFallback = () => (
+    loadScript(cdnUrl, timeoutMs, plotlyIsReady, 'Plotly').catch(cdnError => {
+      console.warn(
+        '[Plotly] Plotly CDN unavailable or slow; trying the local fallback.',
+        cdnError
+      );
+      return loadScript(localUrl, timeoutMs, plotlyIsReady, 'Plotly').catch(localError => {
+        console.warn(
+          '[Plotly] Plotly local fallback unavailable or slow; retrying the CDN without a timeout.',
+          localError
+        );
+        return loadScript(cdnUrl, null, plotlyIsReady, 'Plotly');
+      });
     })
   );
 
@@ -219,12 +241,8 @@ function plotlyLoaderHtml(mathJaxEnabled) {
     };
   }
 
-  window.plotlyReady = window.plotlyReady || loadWithFallback(
-    cdnUrl,
-    localUrl,
-    plotlyIsReady,
-    'Plotly'
-  ).then(() => window.Plotly);
+  window.plotlyReady = window.plotlyReady || loadPlotlyWithFallback()
+    .then(() => window.Plotly);
 
   if (mathJaxEnabled) {
     window.mathJaxReady = window.mathJaxReady || loadWithFallback(

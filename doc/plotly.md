@@ -45,9 +45,11 @@ plotly_mathjax: true
 1. 仅在 `plotly: true` 或页面实际包含 Plotly tag 时注入资源。
 2. 加载共享样式 `plotly-blog.css` 和共享脚本
    `plotly-blog-theme.js`。
-3. 优先从 CDN 加载 Plotly 3.7.0；超时或失败后切换到本地同版本文件。
-4. 仅在 `plotly_mathjax: true` 时加载 MathJax 3.2.2，并采用相同的
-   CDN 优先、本地回退策略。
+3. 优先从 jsDelivr 加载 Plotly 3.7.0；10 秒内未成功则切换到本地同版本
+   文件。本地文件在 10 秒内也未成功时，再次请求 jsDelivr，最后一次不设置
+   超时，但浏览器明确触发网络错误时仍会报告加载失败。
+4. 仅在 `plotly_mathjax: true` 时加载 MathJax 3.2.2。MathJax 保持
+   CDN 优先、本地回退的两阶段策略，每次最多等待 10 秒。
 5. `window.plotlyMathReady` 始终等待 Plotly；启用 MathJax 时也等待
    MathJax 初始化完成。
 6. 图表渲染完成后移除“图表加载中”提示；异常时显示本地化错误信息。

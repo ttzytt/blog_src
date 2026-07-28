@@ -142,13 +142,13 @@ markdown:
 # Add `plotly_mathjax: true` only when Plotly labels or external controls use
 # TeX. Both libraries prefer a versioned CDN and fall back to a local copy.
 plotly:
-  cdn_url: https://cdn.plot.ly/plotly-3.7.0.min.js
+  cdn_url: https://cdn.jsdelivr.net/npm/plotly.js@3.7.0/dist/plotly.min.js
   local_url: /js/vendor/plotly-3.7.0.min.js
   mathjax_cdn_url: https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js
   mathjax_local_url: /js/vendor/mathjax-3.2.2-tex-svg.js
   theme_url: /js/plotly-blog-theme.js
   stylesheet_url: /css/plotly-blog.css
-  timeout_ms: 5000
+  timeout_ms: 10000
   i18n:
     zh-CN:
       loading: 图表加载中...
