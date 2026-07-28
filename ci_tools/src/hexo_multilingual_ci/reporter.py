@@ -41,9 +41,23 @@ class ResultReporter:
             )
             return
 
+        rendered_infos: set[tuple[str | None, str]] = set()
         for result in results:
             for finding in result.findings:
-                style = "bold red" if finding.severity is Severity.ERROR else "yellow"
+                if finding.severity is Severity.INFO:
+                    info_key = (
+                        str(finding.path) if finding.path else None,
+                        finding.message,
+                    )
+                    if info_key in rendered_infos:
+                        continue
+                    rendered_infos.add(info_key)
+                styles = {
+                    Severity.ERROR: "bold red",
+                    Severity.WARNING: "yellow",
+                    Severity.INFO: "cyan",
+                }
+                style = styles[finding.severity]
                 location = f"{finding.path}: " if finding.path else ""
                 self.console.print(
                     f"[{style}]{finding.severity.value.upper()}[/{style}] "
@@ -55,6 +69,7 @@ class ResultReporter:
         table.add_column("Checked", justify="right")
         table.add_column("Skipped", justify="right")
         table.add_column("Warnings", justify="right")
+        table.add_column("Info", justify="right")
         for result in results:
             status = "[green]PASS[/green]" if result.passed else "[red]FAIL[/red]"
             table.add_row(
@@ -63,5 +78,6 @@ class ResultReporter:
                 str(result.checked),
                 str(result.skipped),
                 str(len(result.warnings)),
+                str(len(result.infos)),
             )
         self.console.print(table)

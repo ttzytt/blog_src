@@ -14,7 +14,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 3 页表实验，包括加速系统调用、打印页表以及利用 RISC-V 页表标志检测已访问页面。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

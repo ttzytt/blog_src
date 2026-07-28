@@ -14,7 +14,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: Derives backpropagation for a dense neural network and implements MNIST digit recognition, including forward propagation, gradients, and training.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/神经网络/bp/mnist_number.png

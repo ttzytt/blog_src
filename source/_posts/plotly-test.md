@@ -9,11 +9,11 @@ tags:
   - 数据可视化
 categories:
   - 测试
-description: 使用 Plotly 绘制可调节振幅和频率的正弦函数。
+description: 使用 Plotly 绘制交互式正弦函数图表，通过滑块实时调整振幅和频率，并演示 Hexo 文章中的图表嵌入与多语言标签。
 plotly: true
 plotly_mathjax: true
 comments: false
-skip_multilingual_check: true
+skip_multilingual_check: false
 ---
 
 下面的曲线表示

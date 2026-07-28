@@ -12,7 +12,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: A tutorial on randomized balanced treaps, covering rotating and FHQ treaps, split and merge operations, ordered queries, and interval reversal.
 top_img: "linear-gradient(to right, #2c3e50, #4ca1af)"
 comments:
 cover: /img/treap/rotate.svg

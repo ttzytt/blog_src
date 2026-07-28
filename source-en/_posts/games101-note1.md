@@ -13,7 +13,7 @@ tags:
 categories:
 - Study Notes 
 keywords:
-description:
+description: GAMES101 notes on 3D rotations, coordinate transformations, projection, rasterization, interpolation, and related graphics mathematics.
 top_img: /img/GAMES101/games101.png
 comments:
 cover: /img/GAMES101/games101.png

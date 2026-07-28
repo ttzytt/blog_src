@@ -14,7 +14,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 6 写时复制 fork，涵盖共享页映射、缺页复制、引用计数以及 uvmcopy 和 copyout 的修改。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

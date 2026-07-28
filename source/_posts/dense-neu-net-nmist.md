@@ -14,7 +14,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 推导全连接神经网络的反向传播算法，并以 MNIST 手写数字识别为例实现前向传播、梯度计算与训练过程。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/神经网络/bp/mnist_number.png

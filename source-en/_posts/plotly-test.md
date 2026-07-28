@@ -9,11 +9,11 @@ tags:
   - Data Visualization
 categories:
   - Testing
-description: Use Plotly to draw a sine function with adjustable amplitude and frequency.
+description: Demonstrates an interactive Plotly sine-wave chart with sliders for amplitude and frequency, including Hexo embedding and localized chart labels.
 plotly: true
 plotly_mathjax: true
 comments: false
-skip_multilingual_check: true
+skip_multilingual_check: false
 ---
 
 {% note danger simple %}

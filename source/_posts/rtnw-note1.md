@@ -13,7 +13,7 @@ tags:
 - bvh
 categories: 学习笔记
 keywords:
-description:
+description: 记录《Ray Tracing：The Next Week》的学习与扩展实现，涵盖 BVH、纹理、柏林噪声、实例变换、体积雾和多线程。
 top_img: "/img/光追/next_week/final_scene.png"
 comments:
 cover: "/img/光追/next_week/final_scene.png"

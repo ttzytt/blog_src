@@ -12,7 +12,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 1 utilities，实现 sleep、pingpong、primes、find 和 xargs，练习 Unix 进程、管道与文件描述符。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/lab/lab1_primes_pipeline_transfer.svg

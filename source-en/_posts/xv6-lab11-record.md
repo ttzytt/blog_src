@@ -12,7 +12,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on xv6 Lab 11 mmap, covering virtual-memory-area tracking, lazy page faults, file-backed mappings, munmap, and process cleanup.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

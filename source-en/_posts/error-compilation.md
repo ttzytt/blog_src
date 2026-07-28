@@ -10,7 +10,7 @@ tags:
 categories:
 - Uncategorized
 keywords:
-description:
+description: A reusable collection of programming and environment-configuration problems, with solutions for C++, toolchains, and system setup.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: false

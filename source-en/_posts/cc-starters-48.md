@@ -13,7 +13,7 @@ tags:
 categories:
 - Solutions
 keywords:
-description:
+description: Solutions to several CodeChef Starters 48 problems, explaining the key observations, algorithms, complexity, and C++ implementations.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/Codechef_logo.png

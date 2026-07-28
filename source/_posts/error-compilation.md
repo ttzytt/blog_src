@@ -10,7 +10,7 @@ tags:
 categories:
 - 不知道咋分类
 keywords:
-description:
+description: 汇总编程和环境配置中遇到的杂项问题及解决方法，涵盖 C++、工具链和系统配置等可复用排错记录，并补充常见原因分析。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: false

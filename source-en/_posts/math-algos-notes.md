@@ -13,7 +13,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: Notes on number theory including Euclid's algorithm, extended GCD, modular inverses, and linear recurrences, with derivations and code.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: false 

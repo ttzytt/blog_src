@@ -11,7 +11,7 @@ tags:
 categories:
 - Hexo
 keywords:
-description:
+description: Records cross-platform font-loading issues encountered while adding Iosevka to Hexo Butterfly, including CSS injection, paths, and deployment.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: img/Hexo_blog_logo.svg

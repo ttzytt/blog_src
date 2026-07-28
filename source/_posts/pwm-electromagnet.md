@@ -9,7 +9,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 从 LR 电路微分方程推导 PWM 周期稳态下的峰谷电流、平均电流与平均功耗，并通过交互图表分析频率、占空比和时间常数的影响。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/LR_system_PWM/cover.png
@@ -28,7 +28,7 @@ plotly_mathjax: true
 aplayer:
 highlight_shrink:
 aside:
-skip_multilingual_check: true
+skip_multilingual_check: false
 published: true
 ---
 

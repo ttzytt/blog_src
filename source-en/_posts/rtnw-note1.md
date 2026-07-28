@@ -13,7 +13,7 @@ tags:
 - BVH
 categories: Study Notes
 keywords:
-description:
+description: Study notes and extensions for Ray Tracing The Next Week, covering BVH, textures, Perlin noise, transforms, fog, and multithreading.
 top_img: "/img/光追/next_week/final_scene.png"
 comments:
 cover: "/img/光追/next_week/final_scene.png"

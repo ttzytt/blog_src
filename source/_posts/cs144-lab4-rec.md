@@ -12,7 +12,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 Stanford CS144 Lab 4 的实现过程，将 TCP 发送端和接收端组合为完整连接，并梳理状态转换与报文处理。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/CS144/tcp状态流转图.jpg

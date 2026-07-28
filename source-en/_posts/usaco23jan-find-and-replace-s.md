@@ -14,7 +14,7 @@ tags:
 categories:
 - Solutions
 keywords:
-description:
+description: Explains the graph-based solution to USACO Find and Replace, including cycle handling, special cases, minimum operations, and implementation details.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments: 
 cover: "/img/USACO_logo.png"

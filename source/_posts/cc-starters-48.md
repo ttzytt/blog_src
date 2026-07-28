@@ -13,7 +13,7 @@ tags:
 categories:
 - 题解
 keywords:
-description:
+description: 整理 CodeChef Starters 48 多道题的解法，分析异或、树结构等关键性质，并给出对应的算法思路与实现。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/Codechef_logo.png

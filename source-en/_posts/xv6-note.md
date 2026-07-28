@@ -15,7 +15,7 @@ keywords:
 - Traps
 - Assembly
 - Low-level
-description:
+description: xv6 operating-system notes on page tables, user and kernel traps, interrupts, context switching, scheduling, and synchronization with locks.
 top_img: "linear-gradient(to right, #2c3e50, #4ca1af)"
 comments:
 cover: /img/xv6/note/xv6书封面.png

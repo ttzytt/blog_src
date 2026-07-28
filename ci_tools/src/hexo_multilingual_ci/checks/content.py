@@ -37,7 +37,7 @@ class ContentCompletenessCheck(ProjectCheck):
                 target_path = target_tree.root / relative_path
                 try:
                     if self.project.path_is_skipped(relative_path):
-                        result.skipped += 1
+                        result.skip(relative_path)
                         continue
                     if not target_path.is_file():
                         continue

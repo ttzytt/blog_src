@@ -11,7 +11,7 @@ tags:
 categories:
 - Hexo
 keywords:
-description:
+description: 记录 Hexo Butterfly 更换 Iosevka 字体时遇到的跨平台加载问题，并分析 CSS 注入、字体路径与部署配置。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: img/Hexo_blog_logo.svg

@@ -11,7 +11,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: Derives least squares from calculus and linear algebra, explaining squared-error minimization, normal equations, and the geometric interpretation.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments: 
 cover: '/img/最小二乘法/Linear_regression.svg.png'

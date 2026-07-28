@@ -14,7 +14,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 介绍使用龙格-库塔法数值求解常微分方程的原理、离散公式、误差分析与实验结果，并结合完整报告展示具体计算过程。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover:

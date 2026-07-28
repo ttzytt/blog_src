@@ -15,7 +15,7 @@ keywords:
 - 陷入
 - 汇编
 - 底层
-description:
+description: 整理 xv6 操作系统核心机制，包括页表、用户态与内核态陷阱、中断、上下文切换、线程调度以及锁等实现细节。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

@@ -12,7 +12,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: Explains function calls through assembly, calling conventions, stack frames, and parameter passing, plus recursion, exploits, and backtraces.
 top_img: "linear-gradient(to right, #2c3e50, #4ca1af)"
 comments:
 cover: /img/非递归dfs/cover.png

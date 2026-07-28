@@ -16,7 +16,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 4 traps 实验，涵盖 RISC-V 汇编、栈回溯、定时 alarm、陷阱处理与中断现场恢复。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

@@ -5,6 +5,7 @@ Typed, class-based multilingual validation for the parent Hexo project.
 ```shell
 uv --directory ci_tools run multilingual-ci check --project-root ..
 uv --directory ci_tools run multilingual-ci coverage --project-root .. --strict
+uv --directory ci_tools run multilingual-ci descriptions --project-root ..
 uv --directory ci_tools run multilingual-ci filenames --project-root ..
 uv --directory ci_tools run pytest
 ```
@@ -19,5 +20,9 @@ on the repository's current articles.
 
 `skip_multilingual_check: true` is a path-wide opt-out: when any existing
 language variant sets it, taxonomy, coverage, front matter, and content checks
-all skip that relative path. The post filename policy always runs and requires
-lowercase letters, digits, and single hyphens between segments.
+all skip that relative path and report it as an `INFO` finding. Description and
+filename policies always run.
+Descriptions are required. After consecutive whitespace is collapsed, Chinese
+descriptions must contain 50–160 characters and English descriptions 120–160
+characters. Post filenames require lowercase letters, digits, and single
+hyphens between segments.

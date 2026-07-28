@@ -14,7 +14,7 @@ tags:
 categories:
 - 题解
 keywords:
-description:
+description: 讲解 USACO Find and Replace 的图论解法，包括字符映射、环的处理、特殊情况、最少替换次数与代码实现。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments: 
 cover: "/img/USACO_logo.png"

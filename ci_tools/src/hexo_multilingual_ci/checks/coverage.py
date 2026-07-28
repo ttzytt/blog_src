@@ -22,7 +22,7 @@ class LanguageCoverageCheck(ProjectCheck):
         for relative_path in sorted(self.project.all_relative_paths()):
             try:
                 if self.project.path_is_skipped(relative_path):
-                    result.skipped += 1
+                    result.skip(relative_path)
                     skipped_paths.add(relative_path)
                     continue
             except (OSError, UnicodeError, ValueError) as error:

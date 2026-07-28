@@ -13,7 +13,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 10 文件系统实验，通过扩展 inode 块索引支持大文件，并实现符号链接及相关系统调用行为。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

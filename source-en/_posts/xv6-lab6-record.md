@@ -14,7 +14,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on xv6 Lab 6 copy-on-write fork, covering shared mappings, page-fault copying, reference counts, uvmcopy, and copyout.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

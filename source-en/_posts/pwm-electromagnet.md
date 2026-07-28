@@ -9,7 +9,7 @@ tags:
 categories:
 - Study Notes
 keywords:
-description:
+description: Derives peak, valley, average current, and average power for an LR electromagnet under steady PWM, with interactive frequency and duty-cycle charts.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/LR_system_PWM/cover.png
@@ -28,7 +28,7 @@ plotly_mathjax: true
 aplayer:
 highlight_shrink:
 aside:
-skip_multilingual_check: true
+skip_multilingual_check: false
 published: true
 ---
 

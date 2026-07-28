@@ -12,7 +12,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Implements the genetic algorithm from Complexity in C++, covering genome design, fitness evaluation, selection, crossover, and mutation.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/遗传算法_复杂/crossover.jpg

@@ -12,7 +12,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on Stanford CS144 Labs 0–3, covering the byte stream, stream reassembler, TCP receiver, and TCP sender without publishing full solutions.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/CS144/sponge结构图.svg

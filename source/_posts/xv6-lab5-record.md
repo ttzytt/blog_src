@@ -14,7 +14,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 5 惰性页分配实验，移除 sbrk 的立即分配，在缺页异常中按需映射，并处理相关边界情况。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

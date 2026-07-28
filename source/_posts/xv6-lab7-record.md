@@ -14,7 +14,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 7 多线程实验，实现用户态线程切换，并练习 POSIX 线程、同步机制和 barrier。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

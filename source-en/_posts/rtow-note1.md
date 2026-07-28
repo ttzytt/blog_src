@@ -12,7 +12,7 @@ tags:
 - RTOW
 categories: Study Notes
 keywords:
-description:
+description: Explains Lambertian materials in Ray Tracing in One Weekend through radiometry, the cosine law, diffuse reflection, and the corresponding code.
 top_img: "/img/光追/one_weekend/rand_scene.png"
 comments:
 cover: "/img/光追/one_weekend/rand_scene.png"

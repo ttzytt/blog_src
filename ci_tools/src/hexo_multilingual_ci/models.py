@@ -11,6 +11,7 @@ from typing import Any
 class Severity(StrEnum):
     ERROR = "error"
     WARNING = "warning"
+    INFO = "info"
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,10 @@ class CheckResult:
         return [item for item in self.findings if item.severity is Severity.WARNING]
 
     @property
+    def infos(self) -> list[Finding]:
+        return [item for item in self.findings if item.severity is Severity.INFO]
+
+    @property
     def passed(self) -> bool:
         return not self.errors
 
@@ -45,3 +50,10 @@ class CheckResult:
 
     def warning(self, message: str, path: Path | None = None) -> None:
         self.findings.append(Finding(Severity.WARNING, message, path))
+
+    def info(self, message: str, path: Path | None = None) -> None:
+        self.findings.append(Finding(Severity.INFO, message, path))
+
+    def skip(self, path: Path) -> None:
+        self.skipped += 1
+        self.info("skipped because skip_multilingual_check is true", path)

@@ -14,7 +14,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 9 锁实验，通过每 CPU 空闲链表和哈希缓冲桶降低内存分配器与 buffer cache 的锁竞争。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

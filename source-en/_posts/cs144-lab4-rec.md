@@ -12,7 +12,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on Stanford CS144 Lab 4, combining the TCP sender and receiver into a complete connection and handling state transitions and segments.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/CS144/tcp状态流转图.jpg

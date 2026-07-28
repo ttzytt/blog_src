@@ -9,6 +9,7 @@ from .checks import (
     ContentCompletenessCheck,
     FrontMatterConsistencyCheck,
     LanguageCoverageCheck,
+    PostDescriptionCheck,
     PostFilenameCheck,
     TaxonomyCheck,
 )
@@ -35,5 +36,6 @@ class ValidationRunner:
             LanguageCoverageCheck(self.project, strict=True).run(),
             FrontMatterConsistencyCheck(self.project, source).run(),
             ContentCompletenessCheck(self.project, source).run(),
+            PostDescriptionCheck(self.project).run(),
             PostFilenameCheck(self.project).run(),
         ]

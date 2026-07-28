@@ -12,7 +12,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 系统讲解随机平衡树 Treap，包括旋转与无旋 Treap、分裂合并、顺序查询、建树以及区间翻转操作。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/treap/rotate.svg

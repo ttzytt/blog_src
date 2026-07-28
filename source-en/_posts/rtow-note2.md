@@ -11,7 +11,7 @@ tags:
 - RTOW
 categories: Study Notes
 keywords:
-description:
+description: Explains the camera implementation in Ray Tracing in One Weekend, including orientation, field of view, aperture, focus, and depth of field.
 top_img: "/img/光追/one_weekend/rand_scene.png"
 comments:
 cover: "/img/光追/one_weekend/rand_scene.png"

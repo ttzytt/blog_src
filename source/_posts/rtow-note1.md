@@ -12,7 +12,7 @@ tags:
 - RTOW
 categories: 学习笔记
 keywords:
-description:
+description: 从辐射度量学、朗伯余弦定律和漫反射原理解释《Ray Tracing in One Weekend》中朗伯体材质的代码实现。
 top_img: "/img/光追/one_weekend/rand_scene.png"
 comments:
 cover: "/img/光追/one_weekend/rand_scene.png"

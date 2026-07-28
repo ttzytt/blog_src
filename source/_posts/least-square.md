@@ -11,7 +11,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 分别从微积分和线性代数角度推导最小二乘法，解释误差平方最小化、正规方程，并说明解的存在性与几何投影观点。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments: 
 cover: '/img/最小二乘法/Linear_regression.svg.png'

@@ -16,7 +16,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on xv6 Lab 4 traps, covering RISC-V assembly, stack backtraces, timer alarms, trap handling, and restoring interrupted execution.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

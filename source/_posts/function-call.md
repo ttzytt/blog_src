@@ -12,7 +12,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 从汇编和调用约定出发讲解函数调用、栈帧与参数传递，并进一步讨论递归、回溯、栈溢出和 backtrace。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: '/img/非递归dfs/cover.png'

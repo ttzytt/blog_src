@@ -12,7 +12,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 Stanford CS144 Lab 0 至 Lab 3 的实现思路，涵盖字节流、重组器、TCP 接收端与发送端等核心组件。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/CS144/sponge结构图.svg

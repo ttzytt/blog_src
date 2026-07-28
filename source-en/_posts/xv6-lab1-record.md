@@ -12,7 +12,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Notes on xv6 Lab 1 utilities, implementing sleep, pingpong, primes, find, and xargs while practicing Unix processes, pipes, and file descriptors.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/lab/lab1_primes_pipeline_transfer.svg

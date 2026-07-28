@@ -39,7 +39,7 @@ class TaxonomyCheck(ProjectCheck):
             target_path = target_tree.root / relative_path
             try:
                 if self.project.path_is_skipped(relative_path):
-                    result.skipped += 1
+                    result.skip(relative_path)
                     continue
                 source = self._taxonomy(source_path)
                 target = self._taxonomy(target_path) if target_path.is_file() else None

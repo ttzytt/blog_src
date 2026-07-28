@@ -13,7 +13,7 @@ tags:
 categories:
 - 学习笔记 
 keywords:
-description:
+description: 整理 GAMES101 学习中的若干重点，包括三维旋转、坐标变换、投影、光栅化、插值和图形学相关数学推导。
 top_img: /img/GAMES101/games101.png
 comments:
 cover: /img/GAMES101/games101.png

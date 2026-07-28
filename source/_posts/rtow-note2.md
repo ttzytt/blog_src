@@ -11,7 +11,7 @@ tags:
 - RTOW
 categories: 学习笔记
 keywords:
-description:
+description: 讲解《Ray Tracing in One Weekend》相机类的实现，包括相机定位、视场角、光圈、焦距与景深效果。
 top_img: "/img/光追/one_weekend/rand_scene.png"
 comments:
 cover: "/img/光追/one_weekend/rand_scene.png"

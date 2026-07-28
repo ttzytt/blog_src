@@ -14,7 +14,7 @@ tags:
 categories:
 - Lab Records
 keywords:
-description:
+description: Introduces the Runge–Kutta method for solving ordinary differential equations numerically, including formulas, errors, and experimental results.
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: 'linear-gradient(to right, #2c3e50, #4ca1af)'

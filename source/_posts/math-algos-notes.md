@@ -13,7 +13,7 @@ tags:
 categories:
 - 学习笔记
 keywords:
-description:
+description: 整理欧几里得算法、扩展欧几里得、乘法逆元和线性递推等数论基础，包含公式推导、代码实现及常见应用场景。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: false 

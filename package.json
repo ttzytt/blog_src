@@ -7,6 +7,7 @@
     "build:en": "hexo generate --config _config.yml,config-en.yml --force",
     "build": "node scripts/build-multilingual.js",
     "check:multilingual": "uv run --project ci_tools multilingual-ci check --project-root .",
+    "check:descriptions": "uv run --project ci_tools multilingual-ci descriptions --project-root .",
     "preview": "npm run check:multilingual && npm run build && npm run server",
     "clean": "hexo clean",
     "deploy": "hexo deploy",

@@ -12,7 +12,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 记录 xv6 Lab 11 mmap 实验，涵盖虚拟内存区域管理、缺页时映射文件、munmap 以及进程退出时的资源清理。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/xv6/note/xv6书封面.png

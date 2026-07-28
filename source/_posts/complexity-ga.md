@@ -12,7 +12,7 @@ tags:
 categories:
 - 实验记录
 keywords:
-description:
+description: 基于《复杂》中的罐子收集问题，用 C++ 实现遗传算法，介绍个体编码、适应度、选择、交叉和变异过程。
 top_img: 'linear-gradient(to right, #2c3e50, #4ca1af)'
 comments:
 cover: /img/遗传算法_复杂/crossover.jpg
