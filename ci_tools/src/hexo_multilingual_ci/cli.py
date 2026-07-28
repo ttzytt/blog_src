@@ -12,6 +12,7 @@ from .checks import (
     ContentCompletenessCheck,
     FrontMatterConsistencyCheck,
     LanguageCoverageCheck,
+    PostFilenameCheck,
     TaxonomyCheck,
 )
 from .models import CheckResult
@@ -96,6 +97,14 @@ def content(
 ) -> None:
     project = _project(project_root)
     _finish([ContentCompletenessCheck(project, source_language).run()], output_format)
+
+
+@app.command()
+def filenames(
+    project_root: ProjectRoot = Path(".."),
+    output_format: OutputFormat = "rich",
+) -> None:
+    _finish([PostFilenameCheck(_project(project_root)).run()], output_format)
 
 
 @app.command()

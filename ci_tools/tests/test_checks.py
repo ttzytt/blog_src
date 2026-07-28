@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from hexo_multilingual_ci.checks import (
     ContentCompletenessCheck,
     FrontMatterConsistencyCheck,
     LanguageCoverageCheck,
+    PostFilenameCheck,
     TaxonomyCheck,
 )
 from hexo_multilingual_ci.project import HexoProject
@@ -81,8 +84,8 @@ def test_validation_runner_accepts_valid_project(tmp_path: Path) -> None:
     results = ValidationRunner(project, glossary).all()
 
     assert all(result.passed for result in results)
-    assert [result.checked for result in results] == [1, 1, 1, 1]
-    assert [result.skipped for result in results] == [0, 0, 0, 0]
+    assert [result.checked for result in results] == [1, 1, 1, 1, 2]
+    assert [result.skipped for result in results] == [0, 0, 0, 0, 0]
 
 
 def test_skip_on_one_variant_exempts_the_path_from_all_checks(
@@ -102,8 +105,8 @@ def test_skip_on_one_variant_exempts_the_path_from_all_checks(
     results = ValidationRunner(project, glossary).all()
 
     assert all(result.passed for result in results)
-    assert [result.checked for result in results] == [0, 0, 0, 0]
-    assert [result.skipped for result in results] == [1, 1, 1, 1]
+    assert [result.checked for result in results] == [0, 0, 0, 0, 2]
+    assert [result.skipped for result in results] == [1, 1, 1, 1, 0]
 
 
 def test_coverage_reports_a_missing_language_variant(tmp_path: Path) -> None:
@@ -142,3 +145,30 @@ def test_taxonomy_and_content_report_translation_regressions(tmp_path: Path) -> 
     assert any("tags mismatch" in item.message for item in taxonomy.errors)
     assert not content.passed
     assert any("character count" in item.message for item in content.errors)
+
+
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "Bad-name.md",
+        "bad_name.md",
+        "bad name.md",
+        "bad--name.md",
+        "-bad.md",
+        "bad-.md",
+        "bad.name.md",
+    ],
+)
+def test_post_filename_check_rejects_noncanonical_names(
+    tmp_path: Path, filename: str
+) -> None:
+    project, _ = make_project(tmp_path)
+    source = tmp_path / "source" / "_posts" / "example.md"
+    source.rename(source.with_name(filename))
+
+    result = PostFilenameCheck(project).run()
+
+    assert result.checked == 2
+    assert [finding.path for finding in result.errors] == [
+        Path("source") / "_posts" / filename
+    ]

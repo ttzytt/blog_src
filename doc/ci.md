@@ -25,7 +25,7 @@ uv --directory ci_tools run multilingual-ci check --project-root ..
 ```
 
 工具从 `_config.yml` 和 `config-*.yml` 发现语言、`source_dir` 和文章路径，
-按相对路径配对中文与英文 Markdown。`check` 命令组合四类检查：
+按相对路径配对中文与英文 Markdown。`check` 命令组合五类检查：
 
 1. `TaxonomyCheck`：根据 `translation-glossary-zh-en.csv` 检查标签和分类
    的中英文映射，并报告未使用映射。
@@ -34,9 +34,12 @@ uv --directory ci_tools run multilingual-ci check --project-root ..
    `lang` 本地化，其余 frontmatter 字段必须保持一致。
 4. `ContentCompletenessCheck`：检查译文字符量以及代码块、图片、链接数量，
    防止不完整翻译通过 CI。
+5. `PostFilenameCheck`：检查所有语言的 `_posts` Markdown 文件名，要求名称只由
+   小写英文字母、数字和作为分隔符的单个连字符组成。
 
 任一语言版本设置 `skip_multilingual_check: true` 时，该相对路径会整体跳过
-以上检查。它适合测试页或明确不翻译的文章，不应作为普通错误的规避方式。
+前四项多语言检查。文件名属于仓库结构约束，不受该选项影响。它适合测试页或
+明确不翻译的文章，不应作为普通错误的规避方式。
 
 CI 在运行业务检查前还会执行：
 
@@ -65,6 +68,11 @@ uv --directory ci_tools run pytest
 
 构建脚本还会扫描 Hexo 输出。即使 Hexo 进程返回退出码 0，只要日志包含
 `ERROR` 或 `Process failed:`，整个构建仍会失败，避免部分文章静默缺失。
+
+本项目的 Windows 工作目录已经启用按目录区分大小写，因此仅大小写不同的
+旧 alias 和新的小写正文也能同时写入 `public`；Linux CI 原生支持这种目录。
+如果将仓库重新克隆到另一个 Windows 目录，需要先为新目录启用大小写敏感，
+否则这些路径会在本地构建时发生冲突。
 
 ## GitHub Actions 构建步骤
 

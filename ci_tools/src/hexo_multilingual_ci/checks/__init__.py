@@ -2,6 +2,7 @@
 
 from .content import ContentCompletenessCheck
 from .coverage import LanguageCoverageCheck
+from .filenames import PostFilenameCheck
 from .frontmatter import FrontMatterConsistencyCheck
 from .taxonomy import TaxonomyCheck
 
@@ -9,5 +10,6 @@ __all__ = [
     "ContentCompletenessCheck",
     "FrontMatterConsistencyCheck",
     "LanguageCoverageCheck",
+    "PostFilenameCheck",
     "TaxonomyCheck",
 ]

@@ -9,6 +9,7 @@ from .checks import (
     ContentCompletenessCheck,
     FrontMatterConsistencyCheck,
     LanguageCoverageCheck,
+    PostFilenameCheck,
     TaxonomyCheck,
 )
 from .models import CheckResult
@@ -34,4 +35,5 @@ class ValidationRunner:
             LanguageCoverageCheck(self.project, strict=True).run(),
             FrontMatterConsistencyCheck(self.project, source).run(),
             ContentCompletenessCheck(self.project, source).run(),
+            PostFilenameCheck(self.project).run(),
         ]

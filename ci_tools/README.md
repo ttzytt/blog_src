@@ -5,6 +5,7 @@ Typed, class-based multilingual validation for the parent Hexo project.
 ```shell
 uv --directory ci_tools run multilingual-ci check --project-root ..
 uv --directory ci_tools run multilingual-ci coverage --project-root .. --strict
+uv --directory ci_tools run multilingual-ci filenames --project-root ..
 uv --directory ci_tools run pytest
 ```
 
@@ -18,4 +19,5 @@ on the repository's current articles.
 
 `skip_multilingual_check: true` is a path-wide opt-out: when any existing
 language variant sets it, taxonomy, coverage, front matter, and content checks
-all skip that relative path.
+all skip that relative path. The post filename policy always runs and requires
+lowercase letters, digits, and single hyphens between segments.
