@@ -1,0 +1,5 @@
+loading: Loading chart...
+load_failed: Failed to load Plotly chart
+logarithmic_scale: Log scale
+linear_scale: Linear scale
+control_separator: ": "
