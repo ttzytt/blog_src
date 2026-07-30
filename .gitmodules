@@ -1,0 +1,4 @@
+[submodule "packages/hexo-plotly"]
+	path = packages/hexo-plotly
+	url = https://github.com/ttzytt/hexo-plotly.git
+	branch = main
