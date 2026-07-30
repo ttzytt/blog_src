@@ -49,6 +49,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test Hexo Plotly plugin
+        run: npm run check:plotly
+
       - name: Build site
         run: npm run build
 

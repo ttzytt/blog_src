@@ -6,6 +6,7 @@
     "build:zh": "hexo generate --config _config.yml,config-zh.yml",
     "build:en": "hexo generate --config _config.yml,config-en.yml --force",
     "build": "node scripts/build-multilingual.js",
+    "check:plotly": "npm run check --prefix packages/hexo-plotly && npm test --prefix packages/hexo-plotly",
     "check:multilingual": "uv run --project ci_tools multilingual-ci check --project-root .",
     "check:descriptions": "uv run --project ci_tools multilingual-ci descriptions --project-root .",
     "preview": "npm run check:multilingual && npm run build && npm run server",
@@ -31,6 +32,7 @@
     "hexo-generator-sitemap": "^3.0.1",
     "hexo-generator-tag": "^2.0.0",
     "hexo-pdf": "^1.0.0",
+    "hexo-plotly": "file:packages/hexo-plotly",
     "hexo-reference": "^1.0.4",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-markdown-it": "^7.1.1",
@@ -40,7 +42,6 @@
     "hexo-theme-butterfly": "^5.5.5",
     "hexo-theme-landscape": "^1.1.0",
     "hexo-wordcount": "^6.0.1",
-    "js-yaml": "^4.1.0",
     "valine": "^1.5.3",
     "which": "^6.0.1"
   }

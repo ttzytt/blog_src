@@ -141,28 +141,18 @@ markdown:
 
 # Plotly is loaded only on pages whose Front Matter contains `plotly: true`.
 # Add `plotly_mathjax: true` only when Plotly labels or external controls use
-# TeX. Both libraries prefer a versioned CDN and fall back to a local copy.
+# TeX. The hexo-plotly plugin owns the shared runtime, styles, translations,
+# and version-matched local fallbacks; article-specific chart code stays in
+# any repository-relative directory selected by the author.
 plotly:
+  asset_dir: assets/hexo-plotly
   cdn_url: https://cdn.jsdelivr.net/npm/plotly.js@3.7.0/dist/plotly.min.js
-  local_url: /js/vendor/plotly-3.7.0.min.js
   mathjax_cdn_url: https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js
-  mathjax_local_url: /js/vendor/mathjax-3.2.2-tex-svg.js
-  theme_url: /js/plotly-blog-theme.js
-  stylesheet_url: /css/plotly-blog.css
   timeout_ms: 10000
-  i18n:
-    zh-CN:
-      loading: 图表加载中...
-      load_failed: Plotly 图表加载失败
-      logarithmic_scale: 对数坐标
-      linear_scale: 线性坐标
-      control_separator: "："
-    en:
-      loading: Loading chart...
-      load_failed: Failed to load Plotly chart
-      logarithmic_scale: Log scale
-      linear_scale: Linear scale
-      control_separator: ": "
+  watch: true
+  # Butterfly's power-mode effect listens to bubbling slider input events.
+  # Other themes can omit this compatibility option.
+  stop_input_propagation: true
 
 plugins:
   - hexo-reference

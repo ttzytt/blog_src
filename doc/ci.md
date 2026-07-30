@@ -84,10 +84,11 @@ uv --directory ci_tools run pytest
 4. 执行 ruff、mypy、pytest 和多语言内容检查。
 5. `actions/setup-node@v6` 安装最新 Node.js LTS，并启用 npm 缓存。
 6. `npm ci` 严格按照 `package-lock.json` 安装依赖。
-7. `npm run build` 生成中文站和英文站。
-8. 配置 `PAGES_DEPLOY_KEY`，克隆 `ttzytt/ttzytt.github.io`。
-9. 使用 `rsync -a --delete` 将 `public` 同步到部署仓库。
-10. 只有暂存区确实有变化时才创建部署提交并推送 `main`。
+7. `npm run check:plotly` 检查 `hexo-plotly` 语法并运行插件单元测试。
+8. `npm run build` 生成中文站和英文站，同时完成插件的站点级集成验证。
+9. 配置 `PAGES_DEPLOY_KEY`，克隆 `ttzytt/ttzytt.github.io`。
+10. 使用 `rsync -a --delete` 将 `public` 同步到部署仓库。
+11. 只有暂存区确实有变化时才创建部署提交并推送 `main`。
 
 部署提交保留源提交标题、正文和 SHA，方便从生成站仓库追溯到源码提交。
 
@@ -111,6 +112,7 @@ uv --directory ci_tools run mypy src tests
 uv --directory ci_tools run pytest
 uv --directory ci_tools run multilingual-ci check --project-root ..
 npm ci
+npm run check:plotly
 npm run build
 ```
 

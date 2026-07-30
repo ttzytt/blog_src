@@ -1,6 +1,8 @@
 # Hexo 中的 Plotly 集成
 
-本文记录博客当前使用 Plotly 3.7.0 的方式，以及图表代码需要遵守的约定。
+博客现在通过本地包 `packages/hexo-plotly` 集成 Plotly 3.7.0。插件负责
+Hexo tag、按页资源注入、本地 fallback、MathJax、公共样式、多语言和预览
+依赖追踪；文章目录只保留图表本身的数据与渲染逻辑。
 
 ## 文章配置
 
@@ -10,45 +12,43 @@
 plotly: true
 ```
 
-如果 Plotly 的标题、坐标轴、图例、注释或外部控件包含 TeX，再单独启用：
+如果 Plotly 标题、坐标轴、图例、注释或图表外部控件包含 TeX，再启用：
 
 ```yaml
 plotly: true
 plotly_mathjax: true
 ```
 
-`plotly_mathjax` 只控制 Plotly 使用的 MathJax。正文仍由
-`katex: true` 或 Butterfly 自己的 `mathjax` 配置决定，两者互不替代。
+`plotly_mathjax` 只控制 Plotly 及其外部控件使用的 MathJax。正文仍由
+`katex: true` 或 Butterfly 的正文公式配置处理，两者不会重复加载同一个库。
 
 ## 嵌入外部图表代码
 
-文章通过自定义 Hexo tag 嵌入 JavaScript 文件：
+文章通过 tag 嵌入 JavaScript：
 
 ```text
 {% plotly chart-id source/graph_code/post-name/chart.js 420 %}
 ```
 
-- 第一个参数是当前页面唯一的 DOM id。
+- 第一个参数是页面内唯一的 DOM id。
 - 第二个参数是相对博客根目录的 `.js` 文件路径。
 - 第三个参数是图表高度，单位为像素，可以省略。
-- 文件不强制放在 `graph_code`，但按文章建立子目录便于维护。
-- Hexo 在构建时读取并内联图表代码；修改图表文件后如果预览没有更新，
-  需要先运行 `hexo clean`。
+- 文件不强制位于 `graph_code`，但建议按文章建立子目录。
+- 路径必须留在博客根目录中；插件也会检查符号链接解析后的真实路径。
+- JavaScript 会在构建时内联，因此只能引用可信代码。
 
-图表文件可以直接使用 `target`、`Plotly`、`BlogPlotly` 和
-`chartI18n`。其中 `target` 是 tag 创建的图表容器。
+图表文件可以使用 `target`、`Plotly`、`HexoPlotly` 和 `chartI18n`。
+`BlogPlotly` 暂时保留为 `HexoPlotly` 的兼容别名，所以现有图表无需一次性改名。
 
 ## 图表多语言
 
-每张图仍只维护一份 JavaScript。需要翻译的文字放在与图表脚本同目录、
-同名的 `.i18n.yml` 中。例如：
+每张图只维护一份 JavaScript。可翻译文字放在同目录、同名的
+`.i18n.yml`：
 
 ```text
 source/graph_code/post-name/chart.js
 source/graph_code/post-name/chart.i18n.yml
 ```
-
-翻译文件使用扁平键值结构：
 
 ```yaml
 default: zh-CN
@@ -60,146 +60,117 @@ en:
   timeConstant: Time constant
 ```
 
-构建时，Plotly tag 按以下顺序选择语言：
+插件按以下顺序选择语言：
 
-1. tag 的 `lang` 选项；
+1. tag 的 `lang=...`；
 2. 文章 Front Matter 的 `lang` 或 `language`；
 3. 当前 Hexo 配置的 `language`；
 4. 翻译文件的 `default`。
 
-地区语言会自动回退到基础语言，例如找不到 `en-US` 时继续尝试 `en`。
-一般不需要在 tag 中指定语言；中英文站点使用各自配置构建时会自动选择。
-只有需要覆盖文章或站点语言时才使用：
+地区语言会尝试回退到基础语言。一般让中英文构建自动选择即可；确有覆盖
+需求时可以写：
 
 ```text
 {% plotly chart-id source/graph_code/post-name/chart.js 420 lang=en %}
 ```
 
-图表脚本通过 `chartI18n.text` 读取专用文案，通过
-`chartI18n.common` 读取共享文案：
+图表脚本从 `chartI18n.text` 读取专用文案，从 `chartI18n.common` 读取
+坐标切换和控件分隔符等公共文案。所有语言必须提供相同的扁平字符串键，
+缺键或嵌套值会在构建阶段报错。公式中的 `\text{...}` 也属于可见文字，
+应放入可翻译字符串，不能只翻译公式外的标题。
 
-```js
-const { common, text } = chartI18n;
-
-BlogPlotly.createRangeControls(target, [
-  { label: text.dutyCycle, /* ... */ }
-], {
-  separator: common.controlSeparator
-});
-
-const buttons = BlogPlotly.axisScaleButtons({
-  labels: {
-    logarithmic: common.logarithmicScale,
-    linear: common.linearScale
-  }
-});
-```
-
-共享的加载提示、失败提示、坐标切换按钮和控件分隔符定义在
-`_config.yml` 的 `plotly_i18n` 中；单张图专有的标题、轴名、图例和控件名称
-放在对应的 `.i18n.yml` 中。构建会检查同一翻译文件中的所有语言是否具有
-相同的键，缺键或非字符串值会直接报错。翻译源文件只参与构建，不会复制到
-公开站点。
+插件还会按站点语言加载 Plotly 官方 locale，使 modebar 一并本地化。
+`plotly.js-locales` 的 npm 源文件是 CommonJS 模块，生成器会把本地副本包装成
+浏览器可执行的 `Plotly.register(...)`，而不是直接复制源文件。
 
 ## 加载流程
 
-加载器位于 `scripts/plotly-tag.js`，主要流程如下：
+1. 只在文章 `plotly: true` 或页面实际包含 Plotly tag 时注入插件资源。
+2. 同一页面无论有多少张图，只注入一次共享 CSS、运行时和 Plotly。
+3. Plotly 优先请求配置的 jsDelivr 3.7.0；10 秒超时或失败后加载插件生成的
+   同版本本地文件。本地仍失败时再次请求 CDN，最后一次不设置超时。
+4. 仅在 `plotly_mathjax: true` 时加载 MathJax 3.2.2，使用 CDN 优先、
+   本地回退。
+5. 非英文页面使用同样策略加载 Plotly modebar locale。
+6. 图表完成渲染后移除纯 CSS 加载动画；异常时显示当前语言的失败提示。
 
-1. 仅在 `plotly: true` 或页面实际包含 Plotly tag 时注入资源。
-2. 加载共享样式 `plotly-blog.css` 和共享脚本
-   `plotly-blog-theme.js`。
-3. 优先从 jsDelivr 加载 Plotly 3.7.0；10 秒内未成功则切换到本地同版本
-   文件。本地文件在 10 秒内也未成功时，再次请求 jsDelivr，最后一次不设置
-   超时，但浏览器明确触发网络错误时仍会报告加载失败。
-4. 仅在 `plotly_mathjax: true` 时加载 MathJax 3.2.2。MathJax 保持
-   CDN 优先、本地回退的两阶段策略，每次最多等待 10 秒。
-5. `window.plotlyMathReady` 始终等待 Plotly；启用 MathJax 时也等待
-   MathJax 初始化完成。
-6. 图表渲染完成后移除“图表加载中”提示；异常时显示本地化错误信息。
+本地 Plotly、MathJax、locale、CSS 和运行时都由插件 Generator 生成到
+`assets/hexo-plotly/`。它们不属于 Butterfly，换主题时不需要迁移文件。
+资源 URL 使用 Hexo 的 `url_for` 生成，所以英文站的 `/en/` 前缀也正确。
 
-同一页面中的多张图共享 Plotly、MathJax、主题脚本和样式，不会为每张图
-重复下载依赖。
+MathJax SVG 使用 `fontCache: 'local'`。这里的 `local` 表示每个公式 SVG
+携带自己的字形定义，不是指从本地加载 MathJax。Plotly 会复制公式 SVG；
+页面级 `global` 字形缓存可能让复制后的公式丢失字形引用。
 
-MathJax 的 SVG 字形缓存使用 `fontCache: 'local'`。这里的 `local`
-表示每个公式 SVG 携带自己的字形定义，不是指从本地加载 MathJax。
-Plotly 会复制 MathJax 生成的 SVG；使用页面级 `global` 字形缓存时，
-复制后的公式可能丢失字形引用。
+## 公共主题和控件
 
-## 共享主题和控件
+`packages/hexo-plotly/assets/hexo-plotly.js` 提供：
 
-`source/js/plotly-blog-theme.js` 提供以下公共能力：
+- `getColors()`：读取 `--hexo-plotly-*` CSS 变量；
+- `baseLayout()`：统一透明背景与文字颜色；
+- `axis()`：统一坐标轴、网格和零线；
+- `createRangeControls()`：创建图表外部滑块；
+- `initializeMathChart()`：先排版外部 MathJax，再初始化 Plotly；
+- `axisScaleButtons()`：创建对数/线性坐标切换按钮；
+- `observeTheme()`：主题变化后通知图表重新渲染。
 
-- `getColors()`：读取亮色、暗色主题的 CSS 变量。
-- `baseLayout()`：设置透明背景和统一文字颜色。
-- `axis()`：生成统一的坐标轴标题、网格线和零线。
-- `createRangeControls()`：创建图表外部的滑块控件。
-- `initializeMathChart()`：先排版外部 MathJax 标签，再初始化 Plotly。
-- `axisScaleButtons()`：生成对数坐标与线性坐标切换按钮。
-- `observeTheme()`：主题变化后重新渲染图表。
+样式位于 `packages/hexo-plotly/assets/hexo-plotly.css`。它不读取 Butterfly
+配置，而是识别常见亮暗主题属性/类和 `prefers-color-scheme`；主题需要更精确
+的配色时，覆盖 `--hexo-plotly-*` 变量即可。加载动画不依赖 Font Awesome。
 
-图表专用数学、数据和 trace 应留在对应的图表文件中。跨文章复用的颜色、
-控件结构或行为才放入共享 CSS 和共享脚本。
+`stop_input_propagation: true` 是当前博客针对 Butterfly power-mode 效果的
+兼容配置，不是插件对所有主题的默认假设。
 
-## 对数与线性坐标切换
+## 实时预览与重新渲染
 
-当前电流—频率图和平均功率—频率图默认使用对数横轴，并在图内提供
-“对数坐标”和“线性坐标”按钮。
+tag 会把图表 JavaScript 内联进文章 HTML。仅仅刷新浏览器只能重新请求 Hexo
+当前生成的 HTML；如果 Hexo 复用了文章的旧渲染缓存，刷新本身不会读入新的
+图表文件。
 
-重新渲染前从 `target.layout.xaxis.type` 读取当前类型，因此拖动滑块或
-切换博客主题后，图表不会无条件跳回对数坐标。对数轴的 `range` 使用
-以 10 为底的指数范围，线性轴则直接使用实际频率范围。
+插件因此建立了“图表文件 → Post/Page”的依赖表：
 
-## 周期平均功率参考曲线
+- `source_dir` 中的 `.js` 或 `.i18n.yml` 变化由 Hexo source watcher 捕获；
+- 其他位于博客根目录内的引用目录由插件按需监听；
+- 变化后把对应文章的 `content`、`excerpt` 和 `more` 置为待重新渲染；
+- Hexo server 随后重新生成，LiveReload 或手动刷新即可看到新图。
 
-“周期平均功率随占空比变化”包含三条曲线：
+Hexo 公开的 Box watcher 只直接面向 source/theme。外部目录完成失效后需要
+触发 Hexo 当前内部使用的 `processAfter` 事件，因此这是插件中最依赖 Hexo
+内部行为的部分。如果未来 Hexo 大版本改变该事件，最坏情况是外部目录不能
+自动刷新；构建与 `source_dir` 内图表仍可正常工作。
 
-- 实际周期平均功率 \(\bar P(D)\)；
-- 线性参考 \(P_{\mathrm{ref}}D\)；
-- 平方参考 \(P_{\mathrm{ref}}D^2\)。
+## 当前文章中的图表约定
 
-令直流功耗 \(P_{\mathrm{ref}}=V_0^2/R\)。当 \(f\tau\) 很小时，系统在每个周期内
-有更多时间接近稳态，平均功率趋近 \(P_{\mathrm{ref}}D\)；当 \(f\tau\) 很大时，
-电流纹波减小，平均功率趋近 \(P_{\mathrm{ref}}D^2\)。实际曲线会随频率在这两种趋势
-之间变化。
+频率轴图表默认使用对数坐标，并用 `axisScaleButtons()` 提供对数/线性切换。
+重绘前从 `target.layout.xaxis.type` 读取当前状态，滑块和主题切换不会把用户
+强制送回默认坐标类型。
 
-## 归一化 Ribbon 与等高线
+“周期平均功率随占空比变化”绘制实际曲线、线性参考
+\(P_{\mathrm{ref}}D\) 和平方参考 \(P_{\mathrm{ref}}D^2\)。低频时接近线性
+极限，高频时接近平方极限。
 
-周期平均功率除以直流功耗后可以写成：
-
-\[
-\frac{\bar P}{P_{\mathrm{ref}}}=F(D,f\tau).
-\]
-
-`power_landscape.js` 使用这个归一化形式生成两张互补的图：
-
-- Ribbon plot 选取多个典型的 \(f\tau\)，用窄 `surface` trace 显示
-  \(\bar P(D)/P_{\mathrm{ref}}\) 截面，同时标出低频的 \(D\) 极限和高频的
-  \(D^2\) 极限。
-- Contour plot 在 \(D\)-\(f\tau\) 平面上用颜色和等高线表示归一化功耗，
-  便于从俯视角度读取整体分布。
-
-两张图的 \(f\tau\) 轴默认采用对数坐标，并可用图内按钮切换为线性坐标。
-Ribbon 的相机状态通过 `uirevision` 保留，主题变化后不会重置用户视角。
+`power_landscape.js` 用归一化功率
+\(\overline P/P_{\mathrm{ref}}=F(D,f\tau)\) 生成 Ribbon 和等高线图。
+两图的 \(f\tau\) 轴都可切换坐标类型，Ribbon 用 `uirevision` 保留相机状态。
 
 ## 本地验证
 
-先检查 JavaScript 语法和补丁空白：
-
 ```powershell
-node --check scripts/plotly-tag.js
-node --check source/js/plotly-blog-theme.js
+npm test --prefix packages/hexo-plotly
+npm run check --prefix packages/hexo-plotly
 node --check source/graph_code/LR_system_PWM/average_power.js
 git diff --check
 ```
 
-对于 `published: false` 的文章，使用草稿构建验证：
+验证未发布文章时：
 
 ```powershell
 npm run clean
 npx hexo generate --config _config.yml,config-zh.yml --draft --bail
 ```
 
-验证完应重新执行正常构建，以免 `public` 中残留未发布文章：
+还要单独验证英文配置的 `/en/` 资源 URL和图表文案。完成草稿验证后执行正常
+多语言构建，避免 `public` 残留未发布页面：
 
 ```powershell
 npm run clean
